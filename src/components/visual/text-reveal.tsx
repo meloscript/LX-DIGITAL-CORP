@@ -140,6 +140,8 @@ export function RevealParagraph({
   delay = 0.08,
   dynamic = "fade",
 }: RevealParagraphProps) {
+  const reduced = useReducedMotion();
+
   if (dynamic === "words" && typeof children === "string") {
     return (
       <RevealWords
@@ -150,8 +152,6 @@ export function RevealParagraph({
       />
     );
   }
-
-  const reduced = useReducedMotion();
 
   return (
     <motion.div
