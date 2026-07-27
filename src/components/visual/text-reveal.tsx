@@ -38,7 +38,7 @@ type RevealTitleProps = {
   children?: string;
   segments?: TitleSegment[];
   className?: string;
-  as?: "h1" | "h2" | "h3" | "span";
+  as?: "h1" | "h2" | "h3" | "h4" | "span";
   mode?: "word" | "letter";
   delay?: number;
 };
@@ -393,7 +393,7 @@ export function AnimatedHeading({
 }: AnimatedHeadingProps) {
   return (
     <RevealTitle
-      as={Tag as "h1" | "h2" | "h3" | "span"}
+      as={Tag as "h1" | "h2" | "h3" | "h4" | "span"}
       className={className}
       mode={mode}
       segments={segments}
