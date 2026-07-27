@@ -1,10 +1,12 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform, type Variants } from "framer-motion";
+import { useRef } from "react";
+import { easePremium } from "@/lib/motion-config";
 import { usePerformanceMode } from "@/hooks/use-performance-mode";
 import { cn } from "@/lib/utils";
 
-const easePremium = [0.22, 1, 0.36, 1] as const;
+export { easePremium };
 
 export const fadeInUp: Variants = {
   hidden: { opacity: 0, y: 24 },
@@ -46,6 +48,7 @@ interface MotionSectionProps {
   className?: string;
   id?: string;
   delay?: number;
+  parallax?: boolean;
 }
 
 export function MotionSection({
@@ -53,12 +56,22 @@ export function MotionSection({
   className,
   id,
   delay = 0,
+  parallax = false,
 }: MotionSectionProps) {
   const reduced = useReducedMotion();
+  const { effectsEnabled } = usePerformanceMode();
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const y = useTransform(scrollYProgress, [0, 1], [parallax && effectsEnabled ? 18 : 0, parallax && effectsEnabled ? -18 : 0]);
 
   return (
     <motion.div
+      ref={ref}
       id={id}
+      style={parallax && effectsEnabled && !reduced ? { y } : undefined}
       initial={reduced ? false : "hidden"}
       whileInView={reduced ? undefined : "visible"}
       viewport={{ once: true, margin: "-80px" }}
@@ -85,11 +98,15 @@ interface MotionCardProps {
   children: React.ReactNode;
   className?: string;
   delay?: number;
+  float?: boolean;
 }
 
-export function MotionCard({ children, className, delay = 0 }: MotionCardProps) {
+export function MotionCard({ children, className, delay = 0, float = true }: MotionCardProps) {
   const reduced = useReducedMotion();
-  const { effectsEnabled } = usePerformanceMode();
+  const { effectsEnabled, isMobile } = usePerformanceMode();
+
+  const hoverLift = effectsEnabled && !reduced;
+  const canFloat = float && effectsEnabled && !reduced;
 
   return (
     <motion.div
@@ -108,12 +125,31 @@ export function MotionCard({ children, className, delay = 0 }: MotionCardProps) 
           },
         },
       }}
-      whileHover={
-        reduced || !effectsEnabled
-          ? undefined
-          : { y: -4, transition: { duration: 0.25, ease: easePremium } }
+      animate={
+        canFloat
+          ? { y: [0, -4, 0] }
+          : undefined
       }
-      className={cn(className)}
+      transition={
+        canFloat
+          ? { duration: 5 + (delay % 3), repeat: Infinity, ease: "easeInOut", delay: delay * 0.5 }
+          : undefined
+      }
+      whileHover={
+        hoverLift
+          ? {
+              y: -8,
+              scale: 1.015,
+              transition: { duration: 0.35, ease: easePremium },
+            }
+          : undefined
+      }
+      whileTap={
+        isMobile && effectsEnabled && !reduced
+          ? { scale: 0.985, y: -2, transition: { duration: 0.2 } }
+          : undefined
+      }
+      className={cn("motion-card-depth", className)}
     >
       {children}
     </motion.div>

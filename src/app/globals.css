@@ -58,6 +58,18 @@
     scroll-behavior: smooth;
   }
 
+  html.lenis {
+    height: auto;
+  }
+
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
   body {
     @apply bg-background text-foreground antialiased;
   }
@@ -211,15 +223,27 @@
   }
 
   .section-padding {
-    @apply px-4 sm:px-6 lg:px-8 py-20 lg:py-28;
+    @apply px-4 sm:px-6 lg:px-8 py-14 lg:py-20;
   }
 
   .section-alt {
     @apply bg-surface dark:bg-night/50;
   }
 
+  .section-header-space {
+    @apply mb-10 lg:mb-12;
+  }
+
+  .cta-band {
+    @apply py-16 lg:py-20;
+  }
+
+  .cta-group {
+    @apply flex flex-col sm:flex-row gap-3 sm:gap-3.5;
+  }
+
   .section-label {
-    @apply text-premium font-semibold text-sm uppercase tracking-wider mb-3;
+    @apply text-premium font-semibold text-sm uppercase tracking-wider mb-2;
   }
 
   .section-title {
@@ -228,11 +252,61 @@
 
   .section-defer {
     content-visibility: auto;
-    contain-intrinsic-size: auto 480px;
+    contain-intrinsic-size: auto 420px;
   }
 
   .btn-premium-hover {
     @apply transition-transform duration-300 hover:-translate-y-0.5;
+  }
+
+  .btn-glow {
+    @apply relative isolate overflow-visible;
+  }
+
+  .btn-glow::after {
+    content: "";
+    @apply absolute inset-0 rounded-[inherit] opacity-0 pointer-events-none transition-opacity duration-500 -z-10;
+    box-shadow: 0 0 28px rgba(37, 99, 235, 0.28);
+  }
+
+  .btn-glow:hover::after {
+    @apply opacity-100;
+  }
+
+  .btn-cta-solid {
+    @apply border-0 shadow-lg shadow-black/20 ring-0;
+  }
+
+  .btn-cta-solid::after {
+    display: none;
+  }
+
+  .btn-cta-ghost {
+    @apply bg-white/[0.07] text-white border border-white/[0.14] shadow-none backdrop-blur-sm;
+  }
+
+  .btn-cta-ghost:hover {
+    @apply bg-white/[0.12] border-white/[0.22];
+  }
+
+  .btn-cta-ghost::after {
+    display: none;
+  }
+
+  .motion-card-depth {
+    @apply transition-shadow duration-500 ease-out;
+  }
+
+  .motion-card-depth:hover {
+    box-shadow:
+      0 20px 50px rgba(15, 23, 42, 0.12),
+      0 8px 24px rgba(37, 99, 235, 0.08);
+  }
+
+  .dark .motion-card-depth:hover {
+    box-shadow:
+      0 20px 50px rgba(15, 23, 42, 0.45),
+      0 8px 24px rgba(37, 99, 235, 0.12);
   }
 
   .scrollbar-hide {
@@ -246,6 +320,51 @@
 
   .container-max {
     @apply max-w-7xl mx-auto;
+  }
+
+  /* ── Aperçu fond olive (retirer className="preview-olive" sur <html> pour revenir) ── */
+  html.preview-olive {
+    --background: 75 18% 93%;
+    --secondary: 75 14% 87%;
+    --card: 75 16% 91%;
+    --border: 75 10% 80%;
+    --input: 75 10% 80%;
+  }
+
+  html.preview-olive.dark {
+    --background: 75 12% 9%;
+    --secondary: 75 10% 12%;
+    --card: 75 10% 11%;
+    --border: 75 8% 18%;
+    --input: 75 8% 18%;
+  }
+
+  html.preview-olive [data-page-bg="hero"] {
+    background: linear-gradient(
+      to bottom,
+      hsl(75 22% 94%) 0%,
+      hsl(75 16% 88%) 45%,
+      hsl(75 14% 84%) 100%
+    ) !important;
+  }
+
+  html.preview-olive.dark [data-page-bg="hero"] {
+    background: linear-gradient(
+      to bottom,
+      hsl(75 12% 9%) 0%,
+      hsl(75 10% 11%) 50%,
+      hsl(75 8% 13%) 100%
+    ) !important;
+  }
+
+  html.preview-olive .section-alt,
+  html.preview-olive .bg-surface {
+    background-color: hsl(75 14% 86%) !important;
+  }
+
+  html.preview-olive.dark .section-alt,
+  html.preview-olive.dark .bg-surface {
+    background-color: hsl(75 10% 12%) !important;
   }
 }
 
@@ -335,6 +454,14 @@
   .animate-spin-slow,
   .animate-spin-slow-reverse {
     animation: none !important;
+  }
+
+  .btn-glow:hover::after {
+    opacity: 0;
+  }
+
+  .motion-card-depth:hover {
+    box-shadow: none;
   }
 
   html {

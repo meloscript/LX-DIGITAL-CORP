@@ -11,7 +11,7 @@ export const siteConfig = {
   description:
     "Nous aidons les entreprises à développer leur visibilité, automatiser leurs opérations et accélérer leur croissance grâce au digital et à l'intelligence artificielle.",
   url: "https://lxdigitalcorp.com",
-  whatsapp: "237600000000",
+  whatsapp: "33615300314",
   email: "contact@lxdigitalcorp.com",
-  phone: "+237 6XX XXX XXX",
+  phone: "+33 6 15 30 03 14",
 };

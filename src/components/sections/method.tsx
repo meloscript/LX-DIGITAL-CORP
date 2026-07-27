@@ -4,6 +4,8 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Search, Hammer, LineChart } from "lucide-react";
 import { MotionSection } from "@/components/motion";
+import { SectionHeader, RevealSubtitle, RevealWords } from "@/components/visual/text-reveal";
+import { AnimatedIcon } from "@/components/visual/animated-icon";
 import { usePerformanceMode } from "@/hooks/use-performance-mode";
 
 const steps = [
@@ -39,11 +41,12 @@ export function MethodSection() {
   return (
     <section id="methode" className="section-padding">
       <div className="container-max mx-auto">
-        <MotionSection className="text-center mb-16 max-w-3xl mx-auto">
-          <p className="section-label">Méthode</p>
-          <h2 className="section-title">
-            Une approche simple pour des résultats mesurables
-          </h2>
+        <MotionSection className="text-center section-header-space max-w-3xl mx-auto" parallax>
+          <SectionHeader
+            centered
+            label="Méthode"
+            title="Une approche simple pour des résultats mesurables"
+          />
         </MotionSection>
 
         <div ref={ref} className="relative max-w-5xl mx-auto">
@@ -67,18 +70,31 @@ export function MethodSection() {
                 transition={{ duration: 0.5, delay: index * 0.15 }}
                 className="relative text-center lg:text-left"
               >
-                <div className="inline-flex relative z-10 mb-6">
-                  <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-premium to-accent flex items-center justify-center shadow-lg shadow-premium/25 mx-auto lg:mx-0">
-                    <step.icon className="h-7 w-7 text-white" />
-                  </div>
+                <div className="inline-flex relative z-10 mb-6 mx-auto lg:mx-0">
+                  <AnimatedIcon
+                    icon={step.icon}
+                    delay={index * 0.12}
+                    wrapperClassName="h-16 w-16 rounded-2xl bg-gradient-to-br from-premium to-accent shadow-lg shadow-premium/25"
+                    className="h-7 w-7 text-white"
+                    size="lg"
+                  />
                   <span className="absolute -top-2 -right-2 text-xs font-bold text-premium bg-white dark:bg-night px-2 py-0.5 rounded-full border border-premium/20">
                     {step.number}
                   </span>
                 </div>
-                <h3 className="text-xl font-bold text-night dark:text-white mb-2">
+                <RevealSubtitle
+                  delay={index * 0.08}
+                  className="text-xl font-bold text-night dark:text-white mb-2"
+                >
                   {step.title}
-                </h3>
-                <p className="text-muted leading-relaxed">{step.description}</p>
+                </RevealSubtitle>
+                <RevealWords
+                  text={step.description}
+                  compact
+                  delay={0.1 + index * 0.08}
+                  className="text-muted leading-relaxed block"
+                  as="span"
+                />
               </motion.div>
             ))}
           </div>

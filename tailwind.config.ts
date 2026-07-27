@@ -13,7 +13,7 @@ const config: Config = {
         night: "#0F172A",
         premium: "#2563EB",
         "premium-hover": "#1D4ED8",
-        surface: "#F8FAFC",
+        surface: "#E8EBE0",
         muted: "#64748B",
         accent: "#7C3AED",
         border: "hsl(var(--border))",

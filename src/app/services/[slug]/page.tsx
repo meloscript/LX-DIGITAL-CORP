@@ -36,5 +36,5 @@ export default async function ServicePage({ params }: Props) {
 
   if (!service) notFound();
 
-  return <ServicePageContent service={service} />;
+  return <ServicePageContent slug={service.slug} />;
 }

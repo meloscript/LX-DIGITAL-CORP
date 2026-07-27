@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { MotionSection } from "@/components/motion";
+import { AnimatedHeading, RevealLabel, RevealParagraph } from "@/components/visual/text-reveal";
 import { LiquidGlass } from "@/components/visual/liquid-glass";
 import { siteConfig } from "@/lib/utils";
 import { cn } from "@/lib/utils";
@@ -57,16 +58,16 @@ export function ContactSection() {
   return (
     <section id="contact" className="section-padding section-alt">
       <div className="container-max mx-auto">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-12">
           <MotionSection>
-            <p className="section-label">Contact</p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-night dark:text-white tracking-tight mb-4">
+            <RevealLabel className="section-label">Contact</RevealLabel>
+            <AnimatedHeading className="text-3xl sm:text-4xl font-bold text-night dark:text-white tracking-tight mb-4">
               Parlons de vos objectifs
-            </h2>
-            <p className="text-lg text-muted mb-8 leading-relaxed">
+            </AnimatedHeading>
+            <RevealParagraph className="text-lg text-muted mb-6 leading-relaxed" dynamic="words">
               Remplissez le formulaire ou contactez-nous directement. Réponse sous 24 h
               ouvrées.
-            </p>
+            </RevealParagraph>
 
             <div className="space-y-4">
               <a
@@ -80,7 +81,7 @@ export function ContactSection() {
                 </div>
                 <div>
                   <p className="font-medium text-night dark:text-white">WhatsApp</p>
-                  <p className="text-sm text-muted">Réponse rapide garantie</p>
+                  <p className="text-sm text-muted">{siteConfig.phone}</p>
                 </div>
               </a>
 

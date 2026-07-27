@@ -1,5 +1,7 @@
-import Image from "next/image";
+"use client";
+
 import Link from "next/link";
+import { LogoReveal } from "@/components/visual/logo-reveal";
 import { cn } from "@/lib/utils";
 
 type BrandLogoProps = {
@@ -23,19 +25,11 @@ export function BrandLogo({
 }: BrandLogoProps) {
   return (
     <Link href="/" className={cn("flex items-center gap-2.5 group", className)}>
-      <Image
-        src="/logo-lx.png"
-        alt="LX Digital Corp"
-        width={size}
-        height={size}
-        className="rounded-lg object-contain shrink-0 transition-opacity group-hover:opacity-90"
-        style={{ width: size, height: size }}
-        priority
-      />
+      <LogoReveal size={size} priority />
       {showName && (
         <span
           className={cn(
-            "font-semibold tracking-tight",
+            "font-semibold tracking-tight transition-opacity duration-500 group-hover:opacity-90",
             alwaysShowName ? "inline" : "hidden sm:block",
             onDark ? "text-white" : "text-night dark:text-white"
           )}

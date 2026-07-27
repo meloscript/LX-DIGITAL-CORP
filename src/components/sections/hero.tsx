@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { HeroDashboard } from "@/components/sections/hero-dashboard";
 import { HeroSceneLazy } from "@/components/visual/hero-scene-lazy";
 import { HeroTitleReveal } from "@/components/visual/hero-title-reveal";
+import { RevealWords } from "@/components/visual/text-reveal";
 import { TiltContainer } from "@/components/visual/tilt-container";
 import { contactHref } from "@/lib/navigation";
 import {
@@ -40,9 +41,12 @@ export function HeroSection() {
   return (
     <section
       id="accueil"
-      className="relative min-h-screen flex items-center pt-20 overflow-hidden"
+      className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden"
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-white via-blue-50/30 to-surface dark:from-night dark:via-night dark:to-night/95" />
+      <div
+        data-page-bg="hero"
+        className="absolute inset-0 bg-gradient-to-b from-white via-blue-50/30 to-surface dark:from-night dark:via-night dark:to-night/95"
+      />
 
       <HeroSceneLazy />
 
@@ -60,7 +64,7 @@ export function HeroSection() {
       )}
 
       <div className="container-max mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center py-12 lg:py-20">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center py-10 lg:py-16">
           <motion.div
             style={effectsEnabled ? { opacity, y: contentY } : undefined}
             className="max-w-2xl"
@@ -78,32 +82,26 @@ export function HeroSection() {
 
             <HeroTitleReveal />
 
-            <motion.p
-              {...fadeUp(heroTiming.paragraph)}
-              className="text-lg text-muted leading-relaxed mb-8 max-w-xl"
-            >
-              Nous développons des solutions digitales qui attirent plus de clients,
-              optimisent vos processus et transforment votre présence en ligne en
-              véritable moteur de croissance.
-            </motion.p>
+            <RevealWords
+              trigger="mount"
+              delay={heroTiming.paragraph}
+              className="text-lg text-muted leading-relaxed mb-6 max-w-xl"
+              text="Nous développons des solutions digitales qui attirent plus de clients, optimisent vos processus et transforment votre présence en ligne en véritable moteur de croissance."
+            />
 
             <motion.div
               {...fadeUp(heroTiming.buttons)}
-              className="flex flex-col sm:flex-row gap-4"
+              className="cta-group"
             >
-              <div className="btn-premium-hover">
-                <Button asChild size="lg">
-                  <Link href={contactHref}>
-                    Parler à un expert
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </Button>
-              </div>
-              <div className="btn-premium-hover">
-                <Button asChild variant="secondary" size="lg">
-                  <Link href="/#solutions">Découvrir nos solutions</Link>
-                </Button>
-              </div>
+              <Button asChild size="lg">
+                <Link href={contactHref}>
+                  Parler à un expert
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </Button>
+              <Button asChild variant="secondary" size="lg">
+                <Link href="/#solutions">Découvrir nos solutions</Link>
+              </Button>
             </motion.div>
           </motion.div>
 

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Star, ArrowUpRight } from "lucide-react";
 import { MotionSection, MotionCard } from "@/components/motion";
+import { SectionHeader, RevealParagraph, RevealWords } from "@/components/visual/text-reveal";
 import { LiquidGlass } from "@/components/visual/liquid-glass";
 import {
   testimonials,
@@ -33,21 +34,19 @@ export function TestimonialsSection() {
   return (
     <section id="temoignages" className="section-padding bg-surface dark:bg-night/50">
       <div className="container-max mx-auto">
-        <MotionSection className="text-center mb-12 max-w-3xl mx-auto">
-          <p className="text-premium font-semibold text-sm uppercase tracking-wider mb-3">
-            Témoignages
-          </p>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-night dark:text-white tracking-tight mb-4">
-            Ils nous font confiance
-          </h2>
-          <p className="text-lg text-muted">
-            Des entreprises qui ont accéléré leur croissance grâce à des solutions
-            digitales concrètes.
-          </p>
+        <MotionSection className="text-center section-header-space max-w-3xl mx-auto" parallax>
+          <SectionHeader
+            centered
+            label="Témoignages"
+            title="Ils nous font confiance"
+            titleClassName="text-3xl sm:text-4xl lg:text-5xl font-bold text-night dark:text-white tracking-tight mb-4"
+            description="Des entreprises qui ont accéléré leur croissance grâce à des solutions digitales concrètes."
+            descriptionClassName="text-lg text-muted"
+          />
           {hasPlaceholder && (
-            <p className="mt-4 text-xs text-muted/80 italic">
+            <RevealParagraph className="mt-4 text-xs text-muted/80 italic" delay={0.2}>
               Exemples temporaires — remplacez par vos avis clients réels.
-            </p>
+            </RevealParagraph>
           )}
         </MotionSection>
 
@@ -58,7 +57,14 @@ export function TestimonialsSection() {
               <LiquidGlass interactive className="rounded-2xl p-6 h-full flex flex-col">
                 <StarRating rating={item.rating} />
                 <blockquote className="mt-4 text-sm text-night dark:text-white leading-relaxed flex-1">
-                  &ldquo;{item.quote}&rdquo;
+                  &ldquo;
+                  <RevealWords
+                    text={item.quote}
+                    compact
+                    delay={index * 0.04}
+                    as="span"
+                  />
+                  &rdquo;
                 </blockquote>
                 <div className="mt-5 pt-4 border-t border-slate-200/60 dark:border-white/10">
                   <p className="font-semibold text-night dark:text-white text-sm">

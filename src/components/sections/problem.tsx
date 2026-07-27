@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Check, X } from "lucide-react";
 import { MotionSection } from "@/components/motion";
+import { SectionHeader, RevealLine } from "@/components/visual/text-reveal";
 import { LiquidGlass } from "@/components/visual/liquid-glass";
 
 const optimized = [
@@ -24,15 +25,23 @@ export function ProblemSection() {
   return (
     <section className="section-padding section-alt">
       <div className="container-max mx-auto">
-        <MotionSection className="text-center mb-16 max-w-3xl mx-auto">
-          <h2 className="section-title mb-4">
-            Chaque opportunité non saisie devient une opportunité pour vos{" "}
-            <span className="text-gradient">concurrents</span>
-          </h2>
-          <p className="text-lg text-muted">
-            L&apos;écart entre une entreprise optimisée et une entreprise limitée se
-            mesure en clients perdus et en croissance manquée.
-          </p>
+        <MotionSection className="text-center section-header-space max-w-3xl mx-auto" parallax>
+          <SectionHeader
+            centered
+            titleClassName="section-title mb-4"
+            titleSegments={[
+              {
+                text: "Chaque opportunité non saisie devient une opportunité pour vos ",
+              },
+              {
+                text: "concurrents",
+                className: "text-gradient",
+                shine: true,
+              },
+            ]}
+            description="L'écart entre une entreprise optimisée et une entreprise limitée se mesure en clients perdus et en croissance manquée."
+            descriptionClassName="text-lg text-muted"
+          />
         </MotionSection>
 
         <div className="grid md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto">
@@ -59,7 +68,9 @@ export function ProblemSection() {
                     <div className="flex-shrink-0 h-8 w-8 rounded-full bg-premium/10 flex items-center justify-center">
                       <Check className="h-4 w-4 text-premium" />
                     </div>
-                    <span className="text-night dark:text-white font-medium">{item}</span>
+                    <RevealLine delay={index * 0.06} className="text-night dark:text-white font-medium">
+                      {item}
+                    </RevealLine>
                   </motion.li>
                 ))}
               </ul>
@@ -89,7 +100,9 @@ export function ProblemSection() {
                     <div className="flex-shrink-0 h-8 w-8 rounded-full bg-slate-200 dark:bg-white/10 flex items-center justify-center">
                       <X className="h-4 w-4 text-slate-400" />
                     </div>
-                    <span className="text-muted font-medium">{item}</span>
+                    <RevealLine delay={index * 0.06} className="text-muted font-medium">
+                      {item}
+                    </RevealLine>
                   </motion.li>
                 ))}
               </ul>

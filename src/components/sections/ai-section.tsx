@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { Sparkles, Globe, MessageCircle, Mail, BarChart3, Workflow } from "lucide-react";
 import { MotionSection } from "@/components/motion";
+import { AnimatedHeading, RevealLabel, RevealLine, RevealParagraph } from "@/components/visual/text-reveal";
 import { usePerformanceMode } from "@/hooks/use-performance-mode";
 
 const nodes = [
@@ -36,27 +37,27 @@ export function AiSection() {
 
       <div className="container-max mx-auto px-4 sm:px-6 lg:px-8 section-padding relative z-10">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
-          <MotionSection>
-            <p className="text-premium font-semibold text-sm uppercase tracking-wider mb-3">
+          <MotionSection parallax>
+            <RevealLabel className="text-premium font-semibold text-sm uppercase tracking-wider mb-3">
               Intelligence artificielle
-            </p>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight mb-6">
+            </RevealLabel>
+            <AnimatedHeading className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight mb-4">
               L&apos;IA au service de vos opérations
-            </h2>
-            <p className="text-lg text-slate-300 leading-relaxed mb-6">
+            </AnimatedHeading>
+            <RevealParagraph className="text-lg text-slate-300 leading-relaxed mb-5" delay={0.1} dynamic="words">
               Nous connectons vos canaux digitaux — site, messagerie, email, analytics
               et CRM — pour automatiser les tâches à faible valeur et accélérer vos
               résultats.
-            </p>
+            </RevealParagraph>
             <ul className="space-y-3 text-slate-300 text-sm">
               {[
                 "Qualification automatique des leads",
                 "Relances et notifications intelligentes",
                 "Tableaux de bord unifiés",
-              ].map((item) => (
+              ].map((item, i) => (
                 <li key={item} className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-premium" />
-                  {item}
+                  <span className="h-1.5 w-1.5 rounded-full bg-premium shrink-0" />
+                  <RevealLine delay={0.15 + i * 0.06}>{item}</RevealLine>
                 </li>
               ))}
             </ul>
