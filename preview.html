@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LX Digital Corp — Aperçu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            night: '#0F172A',
+            premium: '#2563EB',
+            accent: '#7C3AED',
+            surface: '#F8FAFC',
+            muted: '#64748B',
+          },
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+        },
+      },
+    };
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    .text-gradient { background: linear-gradient(to right, #2563EB, #7C3AED); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .glass { background: rgba(255,255,255,0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.3); }
+  </style>
+</head>
+<body class="font-sans antialiased bg-white text-night">
+
+  <!-- Navbar -->
+  <header class="fixed top-0 inset-x-0 z-50 glass border-b border-slate-200/50">
+    <nav class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="h-9 w-9 rounded-xl bg-gradient-to-br from-premium to-accent flex items-center justify-center">
+          <span class="text-white font-bold text-sm">LX</span>
+        </div>
+        <span class="font-semibold tracking-tight">LX Digital Corp</span>
+      </div>
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-muted">
+        <a href="#hero">Accueil</a>
+        <a href="#solutions">Solutions</a>
+        <a href="#services">Services</a>
+        <a href="#ia">IA</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <a href="#contact" class="hidden sm:inline-flex px-4 py-2 bg-premium text-white text-sm font-medium rounded-xl hover:bg-blue-700 transition">Parler à un expert</a>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section id="hero" class="relative min-h-screen flex items-center pt-16 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-white via-blue-50/30 to-surface"></div>
+    <div class="absolute top-20 -right-32 w-96 h-96 bg-premium/10 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-20 -left-32 w-80 h-80 bg-accent/10 rounded-full blur-3xl"></div>
+
+    <div class="max-w-7xl mx-auto px-6 py-20 grid lg:grid-cols-2 gap-16 items-center relative z-10">
+      <div>
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-premium/5 border border-premium/10 text-premium text-sm font-medium mb-6">
+          Solutions digitales &amp; IA
+        </div>
+        <h1 class="text-4xl sm:text-5xl font-bold leading-tight tracking-tight mb-6">
+          Accélérez la croissance de votre entreprise grâce au
+          <span class="text-gradient"> digital</span> et à l'intelligence artificielle.
+        </h1>
+        <p class="text-lg text-muted leading-relaxed mb-8 max-w-xl">
+          Nous développons des solutions digitales qui attirent plus de clients,
+          optimisent vos processus et transforment votre présence en ligne en moteur de croissance.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="#contact" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-premium text-white font-medium rounded-xl hover:bg-blue-700 transition">Parler à un expert →</a>
+          <a href="#solutions" class="inline-flex items-center justify-center px-6 py-3 bg-surface text-night font-medium rounded-xl border border-slate-200 hover:bg-slate-100 transition">Découvrir nos solutions</a>
+        </div>
+      </div>
+
+      <!-- Dashboard mock -->
+      <div class="relative">
+        <div class="bg-white rounded-2xl shadow-2xl shadow-premium/10 border border-slate-200/80 overflow-hidden">
+          <div class="bg-surface px-4 py-3 border-b border-slate-200/60 flex items-center gap-3">
+            <div class="flex gap-1.5"><div class="w-3 h-3 rounded-full bg-red-400/70"></div><div class="w-3 h-3 rounded-full bg-amber-400/70"></div><div class="w-3 h-3 rounded-full bg-green-400/70"></div></div>
+            <div class="flex-1 text-center"><span class="text-xs text-muted font-medium bg-white px-4 py-1 rounded-lg">LX Growth Platform</span></div>
+            <span class="text-xs text-emerald-600 font-medium flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Live</span>
+          </div>
+          <div class="p-5 space-y-4">
+            <div class="grid grid-cols-3 gap-3">
+              <div class="p-3 rounded-xl bg-surface border border-slate-200/60"><p class="text-sm font-bold text-premium">+284%</p><p class="text-[10px] text-muted uppercase">Visibilité</p></div>
+              <div class="p-3 rounded-xl bg-surface border border-slate-200/60"><p class="text-sm font-bold text-accent">+156%</p><p class="text-[10px] text-muted uppercase">Leads</p></div>
+              <div class="p-3 rounded-xl bg-surface border border-slate-200/60"><p class="text-sm font-bold text-emerald-600">+92%</p><p class="text-[10px] text-muted uppercase">Conversion</p></div>
+            </div>
+            <div class="grid grid-cols-5 gap-3">
+              <div class="col-span-3 p-4 rounded-xl bg-surface border border-slate-200/60">
+                <p class="text-xs font-semibold mb-3">Croissance</p>
+                <div class="flex items-end gap-1.5 h-20">
+                  <div class="flex-1 bg-gradient-to-t from-premium to-premium/40 rounded-sm" style="height:40%"></div>
+                  <div class="flex-1 bg-gradient-to-t from-premium to-premium/40 rounded-sm" style="height:55%"></div>
+                  <div class="flex-1 bg-gradient-to-t from-premium to-premium/40 rounded-sm" style="height:45%"></div>
+                  <div class="flex-1 bg-gradient-to-t from-premium to-premium/40 rounded-sm" style="height:70%"></div>
+                  <div class="flex-1 bg-gradient-to-t from-premium to-premium/40 rounded-sm" style="height:65%"></div>
+                  <div class="flex-1 bg-gradient-to-t from-premium to-premium/40 rounded-sm" style="height:85%"></div>
+                  <div class="flex-1 bg-gradient-to-t from-premium to-premium/40 rounded-sm" style="height:78%"></div>
+                  <div class="flex-1 bg-gradient-to-t from-premium to-premium/40 rounded-sm" style="height:95%"></div>
+                </div>
+              </div>
+              <div class="col-span-2 p-4 rounded-xl bg-gradient-to-br from-accent/10 to-premium/10 border border-accent/20">
+                <p class="text-xs font-semibold mb-1">IA Active</p>
+                <p class="text-[10px] text-muted mb-3">12 tâches automatisées</p>
+                <div class="space-y-1 text-[10px] text-muted"><p>⚡ CRM sync</p><p>⚡ Email auto</p><p>⚡ Analytics</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="absolute -top-4 -right-4 bg-white rounded-xl shadow-lg border px-4 py-3 hidden sm:block">
+          <p class="text-sm font-bold text-night">#1 Google</p>
+          <p class="text-[10px] text-muted">Visibilité locale</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solutions -->
+  <section id="solutions" class="py-24 bg-surface">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="text-3xl sm:text-4xl font-bold text-center mb-16">Des solutions pensées pour développer votre entreprise</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="glass rounded-2xl p-8 shadow-lg"><h3 class="text-xl font-bold mb-2">Visibilité</h3><p class="text-muted">Soyez présent lorsque vos clients recherchent vos services.</p></div>
+        <div class="glass rounded-2xl p-8 shadow-lg"><h3 class="text-xl font-bold mb-2">Performance</h3><p class="text-muted">Transformez votre audience en opportunités commerciales.</p></div>
+        <div class="glass rounded-2xl p-8 shadow-lg"><h3 class="text-xl font-bold mb-2">Automatisation</h3><p class="text-muted">Gagnez du temps grâce à des systèmes intelligents.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services" class="py-24">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="text-3xl sm:text-4xl font-bold text-center mb-16">Des solutions digitales conçues pour la croissance</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="p-6 rounded-2xl border border-slate-200 hover:shadow-xl transition"><h3 class="font-bold mb-2">Référencement local</h3><p class="text-sm text-muted">Aidez vos clients à vous trouver au bon moment.</p></div>
+        <div class="p-6 rounded-2xl border border-slate-200 hover:shadow-xl transition"><h3 class="font-bold mb-2">Création de sites web</h3><p class="text-sm text-muted">Des expériences digitales qui convertissent.</p></div>
+        <div class="p-6 rounded-2xl border border-slate-200 hover:shadow-xl transition"><h3 class="font-bold mb-2">Marketing digital</h3><p class="text-sm text-muted">Stratégies performantes pour votre visibilité.</p></div>
+        <div class="p-6 rounded-2xl border border-slate-200 hover:shadow-xl transition"><h3 class="font-bold mb-2">Intelligence artificielle</h3><p class="text-sm text-muted">Automatisez et améliorez votre efficacité.</p></div>
+        <div class="p-6 rounded-2xl border border-slate-200 hover:shadow-xl transition"><h3 class="font-bold mb-2">Automatisation</h3><p class="text-sm text-muted">Connectez vos outils, simplifiez vos opérations.</p></div>
+        <div class="p-6 rounded-2xl border border-slate-200 hover:shadow-xl transition"><h3 class="font-bold mb-2">Analyse de performance</h3><p class="text-sm text-muted">Prenez de meilleures décisions grâce aux données.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IA -->
+  <section id="ia" class="py-24 bg-night text-white relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-premium/15 to-accent/15"></div>
+    <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
+      <h2 class="text-3xl sm:text-4xl font-bold mb-6">L'intelligence artificielle au service de votre entreprise</h2>
+      <p class="text-slate-300 max-w-2xl mx-auto mb-12">Nous intégrons l'IA dans les processus des entreprises pour améliorer la productivité et créer de nouvelles opportunités.</p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <span class="px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-sm">CRM</span>
+        <span class="px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-sm">Site web</span>
+        <span class="px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-sm">WhatsApp</span>
+        <span class="px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-sm">Email</span>
+        <span class="px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-sm">Analytics</span>
+        <span class="px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-sm">Automatisation</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-24 bg-night text-white text-center">
+    <div class="max-w-3xl mx-auto px-6">
+      <h2 class="text-3xl sm:text-4xl font-bold mb-6">Construisons ensemble votre prochaine croissance</h2>
+      <p class="text-slate-300 mb-10">Parlons de vos objectifs et découvrons comment le digital et l'IA peuvent transformer votre entreprise.</p>
+      <a href="#contact" class="inline-flex px-6 py-3 bg-white text-night font-medium rounded-xl hover:bg-slate-100 transition">Planifier un rendez-vous</a>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="py-24 bg-surface">
+    <div class="max-w-xl mx-auto px-6 text-center">
+      <h2 class="text-3xl font-bold mb-8">Contact</h2>
+      <p class="text-muted mb-6">Pour l'aperçu complet avec animations, lancez :</p>
+      <code class="block bg-white border rounded-xl px-4 py-3 text-sm text-left">cd ~/Projects/lx-digital-corp && npm run dev</code>
+    </div>
+  </section>
+
+  <footer class="bg-night text-slate-400 py-12 text-center text-sm">
+    <p>&copy; 2026 LX Digital Corp — Solutions digitales &amp; intelligence artificielle</p>
+  </footer>
+
+</body>
+</html>
