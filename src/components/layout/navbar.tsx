@@ -94,7 +94,12 @@ export function Navbar() {
     >
       <nav className="container-max mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-14 sm:h-16 lg:h-20 items-center justify-between">
-          <BrandLogo onDark={!scrolled} logoId="brand-logo-anchor" size={32} />
+          <BrandLogo
+            onDark={!scrolled}
+            logoId="brand-logo-anchor"
+            size={32}
+            showName={false}
+          />
 
           <div className="hidden lg:flex items-center gap-8">
             {sectionLinks.map((link) => (

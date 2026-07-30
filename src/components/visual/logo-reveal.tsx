@@ -59,7 +59,7 @@ export function LogoReveal({ size = 36, className, priority = false, id }: LogoR
       transition={{ duration: 0.95, ease: easePremium }}
     >
       <motion.span
-        className="absolute inset-0 rounded-lg bg-premium/25 blur-md"
+        className="absolute inset-0 rounded-lg bg-[#7C3AED]/35 blur-md"
         initial={{ opacity: 0, scale: 0.6 }}
         animate={{ opacity: [0, 0.75, 0.35], scale: [0.6, 1.15, 1] }}
         transition={{ duration: 1.1, ease: easePremium, times: [0, 0.45, 1] }}

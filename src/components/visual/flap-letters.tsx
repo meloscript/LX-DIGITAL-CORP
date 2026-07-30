@@ -10,6 +10,7 @@ type FlapLettersProps = {
   staggerMs?: number;
   durationMs?: number;
   className?: string;
+  letterClassName?: string;
 };
 
 /** Split-flap minimal — chaque lettre bascule, sans décor superflu. */
@@ -21,6 +22,7 @@ export function FlapLetters({
   staggerMs = 16,
   durationMs = 320,
   className,
+  letterClassName,
 }: FlapLettersProps) {
   const restRotate = mode === "out" ? 0 : -100;
   const restOpacity = mode === "out" ? 1 : 0;
@@ -38,7 +40,7 @@ export function FlapLetters({
       {[...text].map((ch, i) => (
         <motion.span
           key={i}
-          className="inline-block"
+          className={["inline-block", letterClassName].filter(Boolean).join(" ")}
           style={{ transformOrigin: origin }}
           initial={
             canAnimate ? { rotateX: restRotate, opacity: restOpacity } : target

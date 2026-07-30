@@ -27,7 +27,11 @@ export function BrandLogo({
   logoId,
 }: BrandLogoProps) {
   return (
-    <Link href="/" className={cn("flex items-center gap-2.5 group", className)}>
+    <Link
+      href="/"
+      className={cn("flex items-center gap-2.5 group", className)}
+      aria-label="LX Digital Corp — Accueil"
+    >
       <LogoReveal size={size} priority id={logoId} />
       {showName && (
         <span
