@@ -3,24 +3,16 @@
 import { motion } from "framer-motion";
 
 type FlapLettersProps = {
-  /** Texte à afficher, lettre par lettre */
   text: string;
-  /** true = bascule vers l'état "actif" (disparu pour "out", visible pour "in") */
   reveal: boolean;
   canAnimate: boolean;
-  /** "out" = flap qui se replie et disparaît, "in" = flap qui tombe et apparaît */
   mode: "in" | "out";
   staggerMs?: number;
   durationMs?: number;
   className?: string;
 };
 
-/**
- * Effet tableau d'aéroport / gare (split-flap) — chaque lettre bascule en 3D
- * sur son propre axe, en cascade de gauche à droite. "out" fait disparaître
- * un mot flap par flap (charnière en haut), "in" fait apparaître un mot
- * flap par flap (charnière en bas), façon panneau mécanique Solari.
- */
+/** Split-flap minimal — chaque lettre bascule, sans décor superflu. */
 export function FlapLetters({
   text,
   reveal,
@@ -46,8 +38,11 @@ export function FlapLetters({
       {[...text].map((ch, i) => (
         <motion.span
           key={i}
-          style={{ display: "inline-block", transformOrigin: origin }}
-          initial={canAnimate ? { rotateX: restRotate, opacity: restOpacity } : target}
+          className="inline-block"
+          style={{ transformOrigin: origin }}
+          initial={
+            canAnimate ? { rotateX: restRotate, opacity: restOpacity } : target
+          }
           animate={target}
           transition={{
             duration: durationMs / 1000,

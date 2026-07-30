@@ -392,6 +392,126 @@
     @apply max-w-7xl mx-auto;
   }
 
+  /* Fond immersif du hero — profondeur + coins violet matte */
+  .hero-gradient-bg {
+    background:
+      radial-gradient(ellipse 65% 50% at 48% 36%, rgba(255, 77, 35, 0.22) 0%, transparent 58%),
+      radial-gradient(ellipse 55% 48% at 0% 0%, rgba(74, 52, 92, 0.62) 0%, rgba(46, 32, 58, 0.28) 38%, transparent 72%),
+      radial-gradient(ellipse 52% 46% at 100% 0%, rgba(68, 48, 88, 0.55) 0%, rgba(42, 30, 56, 0.24) 40%, transparent 70%),
+      radial-gradient(ellipse 56% 50% at 0% 100%, rgba(58, 40, 76, 0.58) 0%, rgba(36, 26, 48, 0.26) 42%, transparent 72%),
+      radial-gradient(ellipse 54% 48% at 100% 100%, rgba(64, 44, 84, 0.52) 0%, rgba(40, 28, 54, 0.22) 40%, transparent 70%),
+      radial-gradient(120% 90% at 4% -12%, rgba(255, 77, 35, 0.2) 0%, transparent 42%),
+      linear-gradient(175deg, #16141a 0%, #0b0a0e 42%, #050406 100%);
+  }
+
+  .hero-vignette {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+      radial-gradient(ellipse 62% 52% at 50% 38%, transparent 22%, rgba(0, 0, 0, 0.82) 100%),
+      radial-gradient(ellipse 42% 38% at 0% 0%, rgba(52, 36, 68, 0.45) 0%, transparent 68%),
+      radial-gradient(ellipse 40% 36% at 100% 0%, rgba(48, 34, 64, 0.4) 0%, transparent 66%),
+      radial-gradient(ellipse 42% 38% at 0% 100%, rgba(44, 30, 58, 0.42) 0%, transparent 68%),
+      radial-gradient(ellipse 40% 36% at 100% 100%, rgba(50, 34, 66, 0.38) 0%, transparent 66%),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.62) 0%, transparent 14%, transparent 64%, rgba(0, 0, 0, 0.82) 100%),
+      linear-gradient(to right, rgba(0, 0, 0, 0.48) 0%, transparent 20%, transparent 80%, rgba(0, 0, 0, 0.48) 100%);
+  }
+
+  .hero-ambient {
+    pointer-events: none;
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(80px);
+    opacity: 0.85;
+    will-change: transform, opacity;
+  }
+
+  /* Ombre + relief derrière le titre */
+  .hero-title-depth {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .hero-title-depth::before {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    left: 2%;
+    right: 2%;
+    bottom: -28%;
+    height: 58%;
+    z-index: 0;
+    background: radial-gradient(
+      ellipse 75% 60% at 50% 40%,
+      rgba(0, 0, 0, 0.95) 0%,
+      rgba(0, 0, 0, 0.55) 38%,
+      rgba(0, 0, 0, 0.2) 62%,
+      transparent 78%
+    );
+    filter: blur(22px);
+    transform: scaleY(0.48);
+  }
+
+  .hero-title-depth::after {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    left: 12%;
+    right: 12%;
+    top: -14%;
+    height: 48%;
+    z-index: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.22) 0%,
+      rgba(255, 255, 255, 0.06) 35%,
+      transparent 100%
+    );
+    filter: blur(14px);
+    opacity: 0.85;
+  }
+
+  .hero-title-line {
+    position: relative;
+    z-index: 1;
+    text-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.28),
+      0 2px 0 rgba(255, 255, 255, 0.08),
+      0 -1px 0 rgba(0, 0, 0, 0.35),
+      0 0 22px rgba(255, 255, 255, 0.1),
+      0 0 48px rgba(255, 77, 35, 0.28),
+      0 0 90px rgba(255, 77, 35, 0.16),
+      0 8px 16px rgba(0, 0, 0, 0.55),
+      0 18px 36px rgba(0, 0, 0, 0.5),
+      0 36px 64px rgba(0, 0, 0, 0.45),
+      0 56px 100px rgba(0, 0, 0, 0.4);
+  }
+
+  .hero-title-line-kinetic {
+    position: relative;
+    z-index: 1;
+    text-shadow:
+      0 1px 0 rgba(255, 220, 200, 0.45),
+      0 2px 0 rgba(255, 77, 35, 0.25),
+      0 -1px 0 rgba(80, 20, 0, 0.4),
+      0 0 20px rgba(255, 77, 35, 0.65),
+      0 0 42px rgba(255, 77, 35, 0.45),
+      0 0 80px rgba(255, 77, 35, 0.28),
+      0 8px 16px rgba(0, 0, 0, 0.5),
+      0 18px 36px rgba(0, 0, 0, 0.45),
+      0 34px 60px rgba(0, 0, 0, 0.4),
+      0 52px 90px rgba(0, 0, 0, 0.35);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-ambient {
+      will-change: auto;
+      animation: none !important;
+    }
+  }
+
   /* Coins coupés en diagonale — remplace border-radius sur tout le système de cartes/boutons */
   .corner-cut-br {
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%);

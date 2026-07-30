@@ -1,20 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { FlapLetters } from "@/components/visual/flap-letters";
 import { HoverSwapText } from "@/components/visual/hover-swap";
 import { KineticCursorLight } from "@/components/visual/kinetic-cursor-light";
-import { LiquidGlass } from "@/components/visual/liquid-glass";
-import {
-  PUMP_COUNT,
-  PUMP_GAP,
-  PUMP_STROKE,
-  TitlePumpCharacter,
-  titleScaleForStep,
-} from "@/components/visual/title-pump-character";
 import { contactHref } from "@/lib/navigation";
 import { kineticEase } from "@/lib/motion-config";
 import { usePerformanceMode } from "@/hooks/use-performance-mode";
@@ -22,91 +19,55 @@ import { usePerformanceMode } from "@/hooks/use-performance-mode";
 const OLD_HEADLINE = "Trouvent vos concurrents";
 const NEW_HEADLINE = "Vous trouvent d'abord";
 
-/** Début des pompes après l'apparition du titre */
-const PUMP_SEQUENCE_DELAY_MS = 900;
-/** Fin des pompes → bascule split-flap */
-const AFTER_PUMPS_MS =
-  PUMP_SEQUENCE_DELAY_MS + (PUMP_COUNT - 1) * PUMP_GAP * 1000 + PUMP_STROKE * 1000 + 200;
-
-/** Timing du tableau à bascule (façon panneau Solari) */
-const FLAP_OUT_DURATION_MS = 300;
-const FLAP_OUT_STAGGER_MS = 14;
-const FLAP_GAP_MS = 160;
-const FLAP_IN_DURATION_MS = 340;
-const FLAP_IN_STAGGER_MS = 20;
+/** Hold barré, puis split-flap */
+const HOLD_MS = 3200;
+const FLAP_OUT_DURATION_MS = 340;
+const FLAP_OUT_STAGGER_MS = 18;
+const FLAP_GAP_MS = 180;
+const FLAP_IN_DURATION_MS = 380;
+const FLAP_IN_STAGGER_MS = 22;
 const FLAP_OUT_TOTAL_MS =
   (OLD_HEADLINE.length - 1) * FLAP_OUT_STAGGER_MS + FLAP_OUT_DURATION_MS;
-/** Le mot neuf ne commence à apparaître qu'une fois l'ancien totalement disparu — jamais de chevauchement */
-const REVEAL_DELAY_MS = AFTER_PUMPS_MS + FLAP_OUT_TOTAL_MS + FLAP_GAP_MS;
+const REVEAL_DELAY_MS = HOLD_MS + FLAP_OUT_TOTAL_MS + FLAP_GAP_MS;
 
 export function HeroSection() {
   const reduced = useReducedMotion();
   const { animateEntrance, effectsEnabled } = usePerformanceMode();
   const [mounted, setMounted] = useState(false);
   const [resolved, setResolved] = useState(false);
-  const [pumpStep, setPumpStep] = useState(0);
-  const [pumping, setPumping] = useState(false);
-  const [returningToLx, setReturningToLx] = useState(false);
   const [flappingOut, setFlappingOut] = useState(false);
-  const titleInnerRef = useRef<HTMLDivElement>(null);
-  const [titleNaturalH, setTitleNaturalH] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
 
   const canAnimate = mounted && animateEntrance && !reduced;
-  const titleScale = titleScaleForStep(pumpStep);
-  /** Le scale CSS ne pousse pas le flux : on réserve la hauteur visuelle */
-  const titleLayoutH = titleNaturalH > 0 ? titleNaturalH * titleScale : undefined;
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, reduced ? 0 : 80]);
+  const contentOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.55, 1],
+    [1, 0.55, 0]
+  );
+  const ambientScale = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [1, reduced ? 1 : 1.18]
+  );
 
   useEffect(() => setMounted(true), []);
-
-  useLayoutEffect(() => {
-    const el = titleInnerRef.current;
-    if (!el) return;
-
-    const measure = () => setTitleNaturalH(el.offsetHeight);
-
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    window.addEventListener("resize", measure);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", measure);
-    };
-  }, [mounted, resolved]);
 
   useEffect(() => {
     if (!mounted) return;
     if (!animateEntrance || reduced) {
       setResolved(true);
       setFlappingOut(true);
-      setPumpStep(PUMP_COUNT);
       return;
     }
 
     const timers: ReturnType<typeof setTimeout>[] = [];
-
-    timers.push(
-      setTimeout(() => {
-        setPumping(true);
-        for (let i = 0; i < PUMP_COUNT; i++) {
-          timers.push(
-            setTimeout(() => {
-              setPumpStep(i + 1);
-            }, i * PUMP_GAP * 1000 + PUMP_STROKE * 450)
-          );
-        }
-      }, PUMP_SEQUENCE_DELAY_MS)
-    );
-
-    timers.push(
-      setTimeout(() => {
-        setPumping(false);
-        setReturningToLx(true);
-        setFlappingOut(true);
-      }, AFTER_PUMPS_MS)
-    );
-
-    /** Le mot neuf n'entame son flap-in qu'une fois l'ancien totalement replié */
+    timers.push(setTimeout(() => setFlappingOut(true), HOLD_MS));
     timers.push(setTimeout(() => setResolved(true), REVEAL_DELAY_MS));
 
     return () => timers.forEach(clearTimeout);
@@ -114,96 +75,104 @@ export function HeroSection() {
 
   return (
     <section
+      ref={sectionRef}
       id="accueil"
-      className="relative min-h-[88dvh] sm:min-h-[85dvh] flex flex-col justify-start overflow-hidden bg-ink pt-28 pb-28 sm:pt-32 sm:pb-32 lg:pt-36"
+      className="relative min-h-[100dvh] flex flex-col justify-center overflow-hidden hero-gradient-bg pt-24 pb-20 sm:pt-28 sm:pb-24"
     >
-      <KineticCursorLight className="hidden lg:block" />
+      {/* Profondeur immersive — lumière + vignette */}
+      <span className="hero-vignette" aria-hidden="true" />
 
-      <div className="container-max mx-auto w-full px-4 sm:px-6 lg:px-8 relative z-10 flex-1 flex flex-col">
-        <div className="relative max-w-5xl shrink-0">
-          {/* Atmosphère liquid glass zone haute — décorative, coûteuse en peinture (blur) :
-              rendue uniquement quand les effets complets sont activés (desktop / bonne machine) */}
-          {effectsEnabled && (
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-x-0 -top-8 h-40 sm:-top-10 sm:h-48 overflow-visible"
-            >
-              <span className="absolute left-[12%] top-2 h-28 w-28 rounded-full bg-kinetic/20 blur-3xl sm:h-36 sm:w-36" />
-              <span className="absolute right-[18%] top-6 h-24 w-32 rounded-full bg-paper/10 blur-3xl sm:h-32 sm:w-40" />
-              <span className="absolute left-1/2 top-10 h-px w-[min(72%,20rem)] -translate-x-1/2 bg-gradient-to-r from-transparent via-paper/25 to-transparent" />
-            </div>
-          )}
-
-          <TitlePumpCharacter
-            active={pumping}
-            pumpStep={pumpStep}
-            returning={returningToLx}
+      {effectsEnabled && (
+        <>
+          <KineticCursorLight className="hidden lg:block z-[2]" size={640} color="rgba(255, 77, 35, 0.42)" />
+          <motion.span
+            aria-hidden="true"
+            className="hero-ambient left-[-14%] top-[-8%] h-[52vmin] w-[52vmin] bg-[#4a345c]/55"
+            style={{ scale: ambientScale }}
+            animate={{ opacity: [0.4, 0.62, 0.45] }}
+            transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
           />
+          <motion.span
+            aria-hidden="true"
+            className="hero-ambient right-[-12%] top-[-6%] h-[44vmin] w-[44vmin] bg-[#443054]/5"
+            style={{ scale: ambientScale }}
+            animate={{ opacity: [0.32, 0.55, 0.38] }}
+            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+          />
+          <motion.span
+            aria-hidden="true"
+            className="hero-ambient left-[-10%] bottom-[-10%] h-[48vmin] w-[48vmin] bg-[#3a284c]/55"
+            style={{ scale: ambientScale }}
+            animate={{ opacity: [0.36, 0.58, 0.42] }}
+            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+          />
+          <motion.span
+            aria-hidden="true"
+            className="hero-ambient right-[-12%] bottom-[-8%] h-[50vmin] w-[50vmin] bg-[#402c58]/5"
+            style={{ scale: ambientScale }}
+            animate={{ opacity: [0.34, 0.56, 0.4] }}
+            transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 1.1 }}
+          />
+          <motion.span
+            aria-hidden="true"
+            className="hero-ambient left-[18%] top-[22%] h-[36vmin] w-[36vmin] bg-kinetic/28"
+            style={{ scale: ambientScale }}
+            animate={{ opacity: [0.28, 0.48, 0.32] }}
+            transition={{ duration: 13, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </>
+      )}
 
-          <h1 className="relative z-10 origin-top text-center sm:text-left">
+      <motion.div
+        className="container-max mx-auto w-full px-4 sm:px-6 lg:px-8 relative z-10 flex-1 flex flex-col justify-center"
+        style={
+          canAnimate
+            ? { y: contentY, opacity: contentOpacity }
+            : undefined
+        }
+      >
+        <div className="relative max-w-5xl shrink-0">
+          <h1 className="relative z-10 text-center sm:text-left">
             <span className="sr-only">
               LX Digital Corp — Vos clients vous trouvent d&apos;abord.
             </span>
 
             <motion.span
               aria-hidden="true"
-              initial={canAnimate ? { opacity: 0, y: 8 } : false}
+              initial={canAnimate ? { opacity: 0, y: 10 } : false}
               animate={canAnimate ? { opacity: 1, y: 0 } : undefined}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-              className="block text-xs sm:text-sm font-semibold tracking-[0.28em] sm:tracking-[0.35em] uppercase text-paper/50 mb-3 sm:mb-4"
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="block text-xs sm:text-sm font-semibold tracking-[0.28em] sm:tracking-[0.35em] uppercase text-paper/50 mb-4 sm:mb-5"
             >
               LX Digital Corp
             </motion.span>
 
-            {/* Slot de hauteur = taille visuelle → sous-texte ne se fait pas écraser */}
             <motion.div
               aria-hidden="true"
+              initial={
+                canAnimate
+                  ? { opacity: 0, y: 28, scale: 1.06, filter: "blur(8px)" }
+                  : false
+              }
               animate={
-                titleLayoutH != null
-                  ? { height: titleLayoutH }
+                canAnimate
+                  ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }
                   : undefined
               }
-              transition={{ duration: 0.55, ease: kineticEase }}
-              className="relative overflow-visible"
+              transition={{ duration: 0.85, delay: 0.12, ease: kineticEase }}
+              className="hero-title-depth text-center sm:text-left origin-center sm:origin-left"
             >
               <motion.div
-                ref={titleInnerRef}
-                initial={canAnimate ? { opacity: 0, scale: 0.7 } : false}
-                animate={
-                  canAnimate
-                    ? { opacity: 1, scale: titleScale }
-                    : { scale: 1 }
-                }
-                transition={
-                  pumpStep === 0
-                    ? { duration: 0.55, delay: 0.2, ease: kineticEase }
-                    : { duration: 0.55, ease: kineticEase }
-                }
-                className="relative origin-top sm:origin-top-left will-change-transform"
+                className="origin-center sm:origin-left will-change-transform"
+                initial={canAnimate ? { scale: 1 } : false}
+                animate={canAnimate ? { scale: 1.14 } : undefined}
+                transition={{ duration: 10, ease: "linear", delay: 0.4 }}
               >
-                {/* Orbes proches — refraction du liquid glass, coûteuses en peinture */}
-                {effectsEnabled && (
-                  <>
-                    <span
-                      aria-hidden="true"
-                      className="pointer-events-none absolute -left-6 top-1 h-24 w-24 rounded-full bg-kinetic/25 blur-2xl sm:h-32 sm:w-32"
-                    />
-                    <span
-                      aria-hidden="true"
-                      className="pointer-events-none absolute -right-4 bottom-0 h-20 w-28 rounded-full bg-paper/15 blur-2xl sm:h-28 sm:w-36"
-                    />
-                  </>
-                )}
+                <span className="hero-title-line block font-display font-extrabold uppercase text-paper leading-[0.9] tracking-[-0.045em] text-[clamp(2.55rem,12vw,6.5rem)]">
+                  Vos clients
+                </span>
 
-                <LiquidGlass
-                  variant="ink"
-                  className="corner-cut-br inline-block w-full max-w-full px-4 py-4 sm:px-6 sm:py-5 text-center sm:text-left"
-                >
-                  <span className="block font-display font-extrabold uppercase text-paper leading-[0.92] tracking-[-0.04em] text-[clamp(1.85rem,9.5vw,5rem)]">
-                    Vos clients
-                  </span>
-
-                <span className="relative mt-1 inline-grid max-w-full font-display font-extrabold uppercase leading-[0.95] tracking-[-0.04em] text-[clamp(0.95rem,4.6vw,3.1rem)]">
+                <span className="relative mt-1.5 inline-grid max-w-full font-display font-extrabold uppercase leading-[1.02] tracking-[-0.05em] text-[clamp(1.2rem,5.8vw,3.85rem)]">
                   <span className="invisible col-start-1 row-start-1 whitespace-nowrap">
                     {OLD_HEADLINE}
                   </span>
@@ -218,6 +187,14 @@ export function HeroSection() {
                     className="col-start-1 row-start-1 whitespace-nowrap text-paper/40"
                   />
 
+                  <motion.span
+                    aria-hidden="true"
+                    className="pointer-events-none col-start-1 row-start-1 self-center h-[0.12em] w-full bg-paper/45 shadow-[0_0_20px_rgba(245,243,238,0.35)]"
+                    initial={false}
+                    animate={{ opacity: flappingOut || resolved ? 0 : 1 }}
+                    transition={{ duration: 0.2 }}
+                  />
+
                   <FlapLetters
                     text={NEW_HEADLINE}
                     mode="in"
@@ -225,25 +202,28 @@ export function HeroSection() {
                     canAnimate={canAnimate}
                     staggerMs={FLAP_IN_STAGGER_MS}
                     durationMs={FLAP_IN_DURATION_MS}
-                    className="col-start-1 row-start-1 whitespace-nowrap text-kinetic"
+                    className="hero-title-line-kinetic col-start-1 row-start-1 whitespace-nowrap text-kinetic"
                   />
                 </span>
-                </LiquidGlass>
               </motion.div>
+
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute left-[4%] right-[4%] -bottom-[30%] h-[56%] rounded-[100%] bg-black/80 blur-3xl -z-10 opacity-70"
+              />
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute left-[20%] right-[20%] -top-[10%] h-[40%] rounded-[100%] bg-white/15 blur-2xl -z-10 opacity-40"
+              />
             </motion.div>
           </h1>
         </div>
 
-        {/* Zone sous-titre + CTA — place libérée par le titre remonté */}
-        <div className="mt-10 sm:mt-12 lg:mt-14 max-w-xl min-h-[5.5rem] sm:min-h-[6.5rem]">
+        <div className="mt-10 sm:mt-12 lg:mt-14 max-w-xl">
           <motion.p
-            initial={canAnimate ? { opacity: 0, y: 12 } : false}
+            initial={canAnimate ? { opacity: 0, y: 16 } : false}
             animate={canAnimate ? { opacity: 1, y: 0 } : undefined}
-            transition={{
-              duration: 0.55,
-              delay: 1.1,
-              ease: "easeOut",
-            }}
+            transition={{ duration: 0.55, delay: 0.55, ease: "easeOut" }}
             className="font-medium text-lg lg:text-xl text-paper/75 leading-relaxed"
           >
             Nous créons des sites web, optimisons votre visibilité sur Google et
@@ -253,14 +233,14 @@ export function HeroSection() {
         </div>
 
         <motion.div
-          initial={canAnimate ? { opacity: 0, y: 12 } : false}
+          initial={canAnimate ? { opacity: 0, y: 16 } : false}
           animate={canAnimate ? { opacity: 1, y: 0 } : undefined}
           transition={{
-            duration: 0.5,
-            delay: AFTER_PUMPS_MS / 1000 + 0.7,
+            duration: 0.55,
+            delay: REVEAL_DELAY_MS / 1000 + 0.35,
             ease: "easeOut",
           }}
-          className="mt-auto pt-12 sm:pt-16 lg:pt-20 flex w-full flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4"
+          className="mt-12 sm:mt-14 flex w-full flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4"
         >
           <Link
             href={contactHref}
@@ -277,7 +257,7 @@ export function HeroSection() {
             <HoverSwapText>Découvrir nos solutions</HoverSwapText>
           </Link>
         </motion.div>
-      </div>
+      </motion.div>
 
       <motion.div
         aria-hidden="true"
@@ -285,10 +265,10 @@ export function HeroSection() {
         animate={canAnimate ? { opacity: 1 } : undefined}
         transition={{
           duration: 0.6,
-          delay: AFTER_PUMPS_MS / 1000 + 1,
+          delay: REVEAL_DELAY_MS / 1000 + 0.45,
           ease: "easeOut",
         }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 xl:hidden"
+        className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 flex flex-col items-center gap-3"
       >
         <span className="text-[10px] font-semibold tracking-[0.35em] uppercase text-paper/35">
           Scroll
