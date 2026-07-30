@@ -2,7 +2,7 @@ import {
   MapPin,
   Monitor,
   TrendingUp,
-  Sparkles,
+  Bot,
   Workflow,
   BarChart,
   type LucideIcon,
@@ -256,7 +256,7 @@ export const services: ServiceData[] = [
   {
     slug: "intelligence-artificielle",
     id: "ia",
-    icon: Sparkles,
+    icon: Bot,
     title: "Intelligence artificielle",
     shortDescription: "Gagnez en efficacité avec l'IA.",
     cardDescription:

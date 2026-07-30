@@ -1,5 +1,8 @@
 export const easePremium = [0.22, 1, 0.36, 1] as const;
 
+/** ease-out-expo — la courbe "premium" pour toute la direction Kinetic */
+export const kineticEase = [0.16, 1, 0.3, 1] as const;
+
 export const motionDurations = {
   fast: 0.35,
   base: 0.55,

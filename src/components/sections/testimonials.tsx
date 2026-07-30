@@ -1,10 +1,11 @@
 "use client";
 
+import { useRef } from "react";
 import Link from "next/link";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { Star, ArrowUpRight } from "lucide-react";
-import { MotionSection, MotionCard } from "@/components/motion";
-import { SectionHeader, RevealParagraph, RevealWords } from "@/components/visual/text-reveal";
-import { LiquidGlass } from "@/components/visual/liquid-glass";
+import { RevealLabel } from "@/components/visual/text-reveal";
+import { usePerformanceMode } from "@/hooks/use-performance-mode";
 import {
   testimonials,
   reviewsSourceUrl,
@@ -18,102 +19,97 @@ function StarRating({ rating }: { rating: number }) {
       {Array.from({ length: 5 }).map((_, i) => (
         <Star
           key={i}
-          className={cn(
-            "h-4 w-4",
-            i < rating ? "fill-amber-400 text-amber-400" : "text-slate-300"
-          )}
+          className={cn("h-4 w-4", i < rating ? "fill-kinetic text-kinetic" : "text-paper/20")}
         />
       ))}
     </div>
   );
 }
 
+function TestimonialCard({ item }: { item: (typeof testimonials)[number] }) {
+  return (
+    <div className="corner-cut-tl shrink-0 w-[85vw] sm:w-[420px] bg-paper/[0.04] border border-paper/10 p-7 flex flex-col h-[320px]">
+      <StarRating rating={item.rating} />
+      <blockquote className="mt-4 text-sm text-paper/85 leading-relaxed flex-1">
+        &ldquo;{item.quote}&rdquo;
+      </blockquote>
+      <div className="mt-5 pt-4 border-t border-paper/10">
+        <p className="font-semibold text-paper text-sm">{item.name}</p>
+        <p className="text-xs text-paper/50">{item.company}</p>
+        <p className="text-xs text-kinetic mt-1">{item.service}</p>
+      </div>
+    </div>
+  );
+}
+
 export function TestimonialsSection() {
+  const reduced = useReducedMotion();
+  const { effectsEnabled } = usePerformanceMode();
   const hasPlaceholder = testimonials.some((t) => t.isPlaceholder);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: wrapperRef,
+    offset: ["start start", "end end"],
+  });
+
+  const trackWidth = testimonials.length * 440;
+  const trackX = useTransform(scrollYProgress, [0, 1], [0, -(trackWidth - 600)]);
+  const trackXpx = useTransform(trackX, (v) => `${v}px`);
+
+  const simple = !effectsEnabled || !!reduced;
 
   return (
-    <section id="temoignages" className="section-padding bg-surface dark:bg-night/50">
-      <div className="container-max mx-auto">
-        <MotionSection className="text-center section-header-space max-w-3xl mx-auto" parallax>
-          <SectionHeader
-            centered
-            label="Témoignages"
-            title="Ils nous font confiance"
-            titleClassName="text-3xl sm:text-4xl lg:text-5xl font-bold text-night dark:text-white tracking-tight mb-4"
-            description="Des entreprises qui ont accéléré leur croissance grâce à des solutions digitales concrètes."
-            descriptionClassName="text-lg text-muted"
-          />
-          {hasPlaceholder && (
-            <RevealParagraph className="mt-4 text-xs text-muted/80 italic" delay={0.2}>
-              Exemples temporaires — remplacez par vos avis clients réels.
-            </RevealParagraph>
-          )}
-        </MotionSection>
-
-        {/* Desktop: horizontal scroll / grid */}
-        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {testimonials.map((item, index) => (
-            <MotionCard key={item.id} delay={index * 0.08}>
-              <LiquidGlass interactive className="rounded-2xl p-6 h-full flex flex-col">
-                <StarRating rating={item.rating} />
-                <blockquote className="mt-4 text-sm text-night dark:text-white leading-relaxed flex-1">
-                  &ldquo;
-                  <RevealWords
-                    text={item.quote}
-                    compact
-                    delay={index * 0.04}
-                    as="span"
-                  />
-                  &rdquo;
-                </blockquote>
-                <div className="mt-5 pt-4 border-t border-slate-200/60 dark:border-white/10">
-                  <p className="font-semibold text-night dark:text-white text-sm">
-                    {item.name}
-                  </p>
-                  <p className="text-xs text-muted">{item.company}</p>
-                  <p className="text-xs text-premium mt-1">{item.service}</p>
-                </div>
-              </LiquidGlass>
-            </MotionCard>
-          ))}
-        </div>
-
-        {/* Mobile: carousel scroll-snap */}
-        <div className="md:hidden flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4">
-          {testimonials.map((item) => (
-            <LiquidGlass
-              key={item.id}
-              className="rounded-2xl p-6 min-w-[85vw] sm:min-w-[320px] snap-center shrink-0"
-            >
-              <StarRating rating={item.rating} />
-              <blockquote className="mt-4 text-sm text-night dark:text-white leading-relaxed">
-                &ldquo;{item.quote}&rdquo;
-              </blockquote>
-              <div className="mt-5 pt-4 border-t border-slate-200/60 dark:border-white/10">
-                <p className="font-semibold text-night dark:text-white text-sm">
-                  {item.name}
-                </p>
-                <p className="text-xs text-muted">{item.company}</p>
-                <p className="text-xs text-premium mt-1">{item.service}</p>
-              </div>
-            </LiquidGlass>
-          ))}
-        </div>
-
-        {reviewsSourceUrl && (
-          <div className="text-center mt-10">
-            <Link
-              href={reviewsSourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-premium font-medium hover:underline"
-            >
-              {reviewsSourceLabel}
-              <ArrowUpRight className="h-4 w-4" />
-            </Link>
-          </div>
+    <section id="temoignages" className="bg-ink relative">
+      <div className="pt-16 lg:pt-20 pb-10 text-center max-w-2xl mx-auto px-4">
+        <RevealLabel className="text-kinetic font-semibold text-sm uppercase tracking-wider mb-3">
+          Témoignages
+        </RevealLabel>
+        <h2 className="font-display font-extrabold text-paper text-3xl sm:text-4xl lg:text-5xl tracking-tight mb-4">
+          Ils nous font confiance
+        </h2>
+        <p className="text-paper/60 leading-relaxed font-light">
+          Des entreprises qui ont accéléré leur croissance grâce à des solutions concrètes.
+        </p>
+        {hasPlaceholder && (
+          <p className="mt-4 text-xs text-paper/35 italic">
+            Exemples temporaires — remplacez par vos avis clients réels.
+          </p>
         )}
       </div>
+
+      {simple ? (
+        <div className="flex gap-4 overflow-x-auto pb-16 snap-x snap-mandatory scrollbar-hide px-4">
+          {testimonials.map((item) => (
+            <div key={item.id} className="snap-center">
+              <TestimonialCard item={item} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div ref={wrapperRef} className="relative" style={{ height: "250vh" }}>
+          <div className="sticky top-0 h-screen flex items-center overflow-hidden">
+            <motion.div style={{ x: trackXpx }} className="flex gap-8 pl-[8vw]">
+              {testimonials.map((item) => (
+                <TestimonialCard key={item.id} item={item} />
+              ))}
+            </motion.div>
+          </div>
+        </div>
+      )}
+
+      {reviewsSourceUrl && (
+        <div className="text-center pb-16 lg:pb-20 relative z-10">
+          <Link
+            href={reviewsSourceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-kinetic font-medium hover:underline"
+          >
+            {reviewsSourceLabel}
+            <ArrowUpRight className="h-4 w-4" />
+          </Link>
+        </div>
+      )}
     </section>
   );
 }

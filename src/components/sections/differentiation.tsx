@@ -61,8 +61,7 @@ export function DifferentiationSection() {
               { text: "Plus qu'un prestataire, un " },
               {
                 text: "partenaire de croissance",
-                className: "text-gradient",
-                shine: true,
+                className: "text-kinetic",
               },
             ]}
             description="LX Digital Corp conçoit des systèmes digitaux qui génèrent de la visibilité, de l'efficacité et de la croissance durable — pas des livrables isolés."

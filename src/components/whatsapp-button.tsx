@@ -14,7 +14,7 @@ export function WhatsAppButton() {
       href={`https://wa.me/${siteConfig.whatsapp}?text=Bonjour,%20je%20souhaite%20en%20savoir%20plus%20sur%20vos%20services%20digitaux.`}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-green-500 text-white shadow-lg shadow-green-500/30 flex items-center justify-center hover:bg-green-600 transition-colors duration-300"
+      className="fixed z-50 h-14 w-14 rounded-full bg-green-500 text-white shadow-lg shadow-green-500/30 flex items-center justify-center hover:bg-green-600 transition-colors duration-300 bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-[max(1.25rem,env(safe-area-inset-right))]"
       aria-label="Contacter via WhatsApp"
       initial={reduced ? false : { opacity: 0, scale: 0.6, y: 20 }}
       animate={reduced ? undefined : { opacity: 1, scale: 1, y: 0 }}

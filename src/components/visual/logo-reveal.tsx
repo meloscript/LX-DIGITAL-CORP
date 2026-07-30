@@ -11,9 +11,11 @@ type LogoRevealProps = {
   size?: number;
   className?: string;
   priority?: boolean;
+  /** Ancre ciblée par l'intro signature pour la position d'atterrissage. */
+  id?: string;
 };
 
-export function LogoReveal({ size = 36, className, priority = false }: LogoRevealProps) {
+export function LogoReveal({ size = 36, className, priority = false, id }: LogoRevealProps) {
   const reduced = useReducedMotion();
   const { effectsEnabled, animateEntrance } = usePerformanceMode();
   const [mounted, setMounted] = useState(false);
@@ -28,6 +30,7 @@ export function LogoReveal({ size = 36, className, priority = false }: LogoRevea
   if (!mounted || reduced || !animateEntrance) {
     return (
       <Image
+        id={id}
         src="/logo-lx.png"
         alt=""
         width={size}
@@ -42,6 +45,7 @@ export function LogoReveal({ size = 36, className, priority = false }: LogoRevea
 
   return (
     <motion.div
+      id={id}
       className="relative shrink-0"
       style={{
         width: size,

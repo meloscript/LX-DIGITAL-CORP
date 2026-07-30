@@ -13,6 +13,8 @@ type BrandLogoProps = {
   alwaysShowName?: boolean;
   /** Taille du logo en pixels */
   size?: number;
+  /** Ancre ciblée par l'intro signature pour la position d'atterrissage. */
+  logoId?: string;
 };
 
 /** Logo officiel LX — « Work smart » */
@@ -22,19 +24,26 @@ export function BrandLogo({
   onDark = false,
   alwaysShowName = false,
   size = 36,
+  logoId,
 }: BrandLogoProps) {
   return (
     <Link href="/" className={cn("flex items-center gap-2.5 group", className)}>
-      <LogoReveal size={size} priority />
+      <LogoReveal size={size} priority id={logoId} />
       {showName && (
         <span
           className={cn(
-            "font-semibold tracking-tight transition-opacity duration-500 group-hover:opacity-90",
-            alwaysShowName ? "inline" : "hidden sm:block",
+            "font-semibold uppercase tracking-[0.16em] transition-opacity duration-500 group-hover:opacity-90 text-xs sm:text-sm",
             onDark ? "text-white" : "text-night dark:text-white"
           )}
         >
-          LX Digital Corp
+          {alwaysShowName ? (
+            "LX Digital Corp"
+          ) : (
+            <>
+              <span className="sm:hidden">LX</span>
+              <span className="hidden sm:inline">LX Digital Corp</span>
+            </>
+          )}
         </span>
       )}
     </Link>

@@ -114,6 +114,26 @@
     -webkit-backdrop-filter: blur(12px) saturate(140%);
   }
 
+  /* Liquid Glass sur fond ink (hero Kinetic) */
+  .liquid-glass-ink {
+    @apply relative overflow-hidden;
+    background:
+      linear-gradient(
+        155deg,
+        rgba(245, 243, 238, 0.12) 0%,
+        rgba(245, 243, 238, 0.04) 42%,
+        rgba(255, 77, 35, 0.06) 100%
+      );
+    backdrop-filter: blur(28px) saturate(185%) brightness(1.05);
+    -webkit-backdrop-filter: blur(28px) saturate(185%) brightness(1.05);
+    border: 1px solid rgba(245, 243, 238, 0.18);
+    box-shadow:
+      0 18px 50px rgba(0, 0, 0, 0.38),
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      inset 0 -1px 0 rgba(255, 77, 35, 0.14),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  }
+
   .liquid-glass-shine {
     @apply pointer-events-none absolute inset-0 z-0;
     background: linear-gradient(
@@ -127,6 +147,56 @@
   .liquid-glass-edge {
     @apply pointer-events-none absolute inset-0 z-0 rounded-[inherit];
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+  }
+
+  .liquid-glass-ink .liquid-glass-shine {
+    background: linear-gradient(
+      118deg,
+      rgba(255, 255, 255, 0.34) 0%,
+      rgba(255, 255, 255, 0.08) 34%,
+      transparent 52%,
+      rgba(255, 77, 35, 0.08) 100%
+    );
+  }
+
+  .liquid-glass-ink .liquid-glass-edge {
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+      inset 0 -12px 28px rgba(255, 77, 35, 0.05);
+  }
+
+  /* Variante allégée — mobile / batterie faible / data économe : même identité,
+     flou divisé par ~3 et pas de reflet en boucle (coût de peinture réduit). */
+  .liquid-glass-ink-lite {
+    @apply relative overflow-hidden;
+    background: rgba(245, 243, 238, 0.08);
+    backdrop-filter: blur(10px) saturate(130%);
+    -webkit-backdrop-filter: blur(10px) saturate(130%);
+    border: 1px solid rgba(245, 243, 238, 0.16);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  }
+
+  .liquid-glass-ink-lite .liquid-glass-shine {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.14) 0%,
+      transparent 45%
+    );
+  }
+
+  .liquid-glass-ink-lite .liquid-glass-edge {
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  }
+
+  .liquid-glass-ink .liquid-glass-specular {
+    @apply pointer-events-none absolute inset-0 z-0;
+    background: linear-gradient(
+      105deg,
+      transparent 38%,
+      rgba(255, 255, 255, 0.22) 50%,
+      transparent 62%
+    );
+    animation: liquid-glass-specular 5.2s ease-in-out 1.4s infinite;
   }
 
   .dark .liquid-glass-shine {
@@ -223,7 +293,7 @@
   }
 
   .section-padding {
-    @apply px-4 sm:px-6 lg:px-8 py-14 lg:py-20;
+    @apply px-4 sm:px-6 lg:px-8 py-12 sm:py-14 lg:py-20;
   }
 
   .section-alt {
@@ -322,6 +392,23 @@
     @apply max-w-7xl mx-auto;
   }
 
+  /* Coins coupés en diagonale — remplace border-radius sur tout le système de cartes/boutons */
+  .corner-cut-br {
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%);
+  }
+
+  .corner-cut-tl {
+    clip-path: polygon(24px 0, 100% 0, 100% 100%, 0 100%, 0 24px);
+  }
+
+  .corner-cut-br-sm {
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+  }
+
+  .corner-cut-tl-sm {
+    clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px);
+  }
+
   /* ── Aperçu fond olive (retirer className="preview-olive" sur <html> pour revenir) ── */
   html.preview-olive {
     --background: 75 18% 93%;
@@ -371,6 +458,26 @@
 @keyframes glass-sweep {
   to {
     transform: translateX(100%);
+  }
+}
+
+@keyframes liquid-glass-specular {
+  0%,
+  58% {
+    transform: translateX(-130%);
+    opacity: 0;
+  }
+  62% {
+    opacity: 1;
+  }
+  78% {
+    transform: translateX(130%);
+    opacity: 0.85;
+  }
+  82%,
+  100% {
+    transform: translateX(130%);
+    opacity: 0;
   }
 }
 
@@ -437,6 +544,11 @@
 @media (prefers-reduced-motion: reduce) {
   .liquid-glass-interactive:hover {
     transform: none;
+  }
+
+  .liquid-glass-ink .liquid-glass-specular {
+    animation: none !important;
+    opacity: 0;
   }
 
   .btn-glass-reflect:hover::after {

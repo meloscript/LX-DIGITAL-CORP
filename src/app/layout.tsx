@@ -1,17 +1,35 @@
-import type { Metadata } from "next";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
+import type { Metadata, Viewport } from "next";
+import { Manrope } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { MotionProvider } from "@/components/providers/motion-provider";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { WhatsAppButton } from "@/components/whatsapp-button";
+import { ScrollProgressRail } from "@/components/visual/scroll-progress-rail";
+import { LogoSignatureIntro } from "@/components/visual/logo-signature-intro";
 import { JsonLd } from "@/components/json-ld";
 import { siteConfig } from "@/lib/utils";
 import "./globals.css";
 
+/** Police unique du site — titres, texte et boutons partagent Manrope */
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  weight: ["400", "500", "600", "700", "800"],
+});
+
 const seoTitle =
   "LX Digital Corp | Solutions digitales et IA pour accélérer votre croissance";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#F5F3EE" },
+    { media: "(prefers-color-scheme: dark)", color: "#0A0A0A" },
+  ],
+};
 
 export const metadata: Metadata = {
   icons: {
@@ -84,9 +102,7 @@ export default function RootLayout({
       <head>
         <JsonLd />
       </head>
-      <body
-        className={`${GeistSans.variable} ${GeistMono.variable} font-sans antialiased`}
-      >
+      <body className={`${manrope.variable} font-sans antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
@@ -94,7 +110,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <MotionProvider>
+            <LogoSignatureIntro />
             <Navbar />
+            <ScrollProgressRail />
             <main>{children}</main>
             <Footer />
             <WhatsAppButton />

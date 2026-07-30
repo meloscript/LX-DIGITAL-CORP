@@ -16,6 +16,13 @@ const config: Config = {
         surface: "#E8EBE0",
         muted: "#64748B",
         accent: "#7C3AED",
+        // Direction "Kinetic" — fond off-white/noir profond, un seul accent saturé
+        ink: "#0A0A0A",
+        paper: "#F5F3EE",
+        kinetic: {
+          DEFAULT: "#FF4D23",
+          hover: "#E63E17",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -48,8 +55,12 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["var(--font-geist-sans)", "Inter", "system-ui", "sans-serif"],
-        mono: ["var(--font-geist-mono)", "monospace"],
+        /** Police unique du site */
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        display: ["var(--font-sans)", "system-ui", "sans-serif"],
+      },
+      transitionTimingFunction: {
+        expo: "cubic-bezier(0.16, 1, 0.3, 1)",
       },
       animation: {
         "fade-in": "fadeIn 0.6s ease-out forwards",
