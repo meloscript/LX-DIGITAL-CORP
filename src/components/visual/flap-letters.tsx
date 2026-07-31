@@ -9,6 +9,8 @@ type FlapLettersProps = {
   mode: "in" | "out";
   staggerMs?: number;
   durationMs?: number;
+  /** Décalage global (ms) — pour enchaîner plusieurs lignes */
+  delayOffsetMs?: number;
   className?: string;
   letterClassName?: string;
 };
@@ -21,6 +23,7 @@ export function FlapLetters({
   mode,
   staggerMs = 16,
   durationMs = 320,
+  delayOffsetMs = 0,
   className,
   letterClassName,
 }: FlapLettersProps) {
@@ -48,7 +51,7 @@ export function FlapLetters({
           animate={target}
           transition={{
             duration: durationMs / 1000,
-            delay: (i * staggerMs) / 1000,
+            delay: (delayOffsetMs + i * staggerMs) / 1000,
             ease: [0.5, 0, 0.2, 1],
           }}
         >

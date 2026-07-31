@@ -1,19 +1,45 @@
+import dynamic from "next/dynamic";
 import { HeroSection } from "@/components/sections/hero";
-import { ValueSection } from "@/components/sections/value";
-import { ProblemSection } from "@/components/sections/problem";
-import { ServicesSection } from "@/components/sections/services";
-import { MethodSection } from "@/components/sections/method";
-import { DifferentiationSection } from "@/components/sections/differentiation";
-import { AiSection } from "@/components/sections/ai-section";
-import { SectorsSection } from "@/components/sections/sectors";
-import { TestimonialsSection } from "@/components/sections/testimonials";
-import { CtaSection } from "@/components/sections/cta";
-import { ContactSection } from "@/components/sections/contact";
+
+const ValueSection = dynamic(() =>
+  import("@/components/sections/value").then((m) => m.ValueSection)
+);
+const ProblemSection = dynamic(() =>
+  import("@/components/sections/problem").then((m) => m.ProblemSection)
+);
+const ServicesSection = dynamic(() =>
+  import("@/components/sections/services").then((m) => m.ServicesSection)
+);
+const MethodSection = dynamic(() =>
+  import("@/components/sections/method").then((m) => m.MethodSection)
+);
+const DifferentiationSection = dynamic(() =>
+  import("@/components/sections/differentiation").then(
+    (m) => m.DifferentiationSection
+  )
+);
+const AiSection = dynamic(() =>
+  import("@/components/sections/ai-section").then((m) => m.AiSection)
+);
+const SectorsSection = dynamic(() =>
+  import("@/components/sections/sectors").then((m) => m.SectorsSection)
+);
+const TestimonialsSection = dynamic(() =>
+  import("@/components/sections/testimonials").then((m) => m.TestimonialsSection)
+);
+const CtaSection = dynamic(() =>
+  import("@/components/sections/cta").then((m) => m.CtaSection)
+);
+const ContactSection = dynamic(() =>
+  import("@/components/sections/contact").then((m) => m.ContactSection)
+);
 
 export default function HomePage() {
   return (
     <>
-      <HeroSection />
+      <div className="hero-mock-stage">
+        <HeroSection />
+      </div>
       <div className="section-defer">
         <ValueSection />
       </div>
@@ -38,7 +64,9 @@ export default function HomePage() {
       <div className="section-defer">
         <TestimonialsSection />
       </div>
-      <CtaSection />
+      <div className="section-defer">
+        <CtaSection />
+      </div>
       <div className="section-defer">
         <ContactSection />
       </div>

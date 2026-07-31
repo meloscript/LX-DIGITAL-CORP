@@ -4,18 +4,21 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { MotionProvider } from "@/components/providers/motion-provider";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
-import { WhatsAppButton } from "@/components/whatsapp-button";
-import { ScrollProgressRail } from "@/components/visual/scroll-progress-rail";
-import { LogoSignatureIntro } from "@/components/visual/logo-signature-intro";
+import {
+  DeferredIntro,
+  DeferredScrollRail,
+  DeferredWhatsApp,
+} from "@/components/layout/deferred-chrome";
 import { JsonLd } from "@/components/json-ld";
 import { siteConfig } from "@/lib/utils";
 import "./globals.css";
 
-/** Police unique du site — titres, texte et boutons partagent Manrope */
+/** Variable font — un seul fichier couvre tous les graisses */
 const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-sans",
-  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+  preload: true,
 });
 
 const seoTitle =
@@ -110,12 +113,12 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <MotionProvider>
-            <LogoSignatureIntro />
+            <DeferredIntro />
             <Navbar />
-            <ScrollProgressRail />
+            <DeferredScrollRail />
             <main>{children}</main>
             <Footer />
-            <WhatsAppButton />
+            <DeferredWhatsApp />
           </MotionProvider>
         </ThemeProvider>
       </body>

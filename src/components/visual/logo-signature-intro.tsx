@@ -29,6 +29,16 @@ export function LogoSignatureIntro() {
     if (typeof window === "undefined") return;
     if (reduced || !animateEntrance) return;
 
+    /* Mobile first : pas d’intro bloquante — LCP plus rapide */
+    if (window.matchMedia("(max-width: 768px)").matches) return;
+
+    try {
+      if (sessionStorage.getItem("lx-logo-intro") === "1") return;
+      sessionStorage.setItem("lx-logo-intro", "1");
+    } catch {
+      /* private mode — run once anyway */
+    }
+
     setShouldRun(true);
     setStage("draw");
 
@@ -55,7 +65,7 @@ export function LogoSignatureIntro() {
         });
       }
       setStage("settle");
-    }, 1550);
+    }, 900);
 
     return () => {
       clearTimeout(toSettle);
@@ -69,7 +79,7 @@ export function LogoSignatureIntro() {
     const toDone = setTimeout(() => {
       setStage("done");
       document.body.style.overflow = "";
-    }, 720);
+    }, 420);
     return () => clearTimeout(toDone);
   }, [stage]);
 
@@ -84,7 +94,7 @@ export function LogoSignatureIntro() {
       className="pointer-events-none fixed inset-0 z-[200] flex items-center justify-center bg-ink"
       initial={{ opacity: 1 }}
       animate={{ opacity: settling ? 0 : 1 }}
-      transition={{ duration: 0.65, ease: "easeInOut", delay: settling ? 0.15 : 0 }}
+      transition={{ duration: 0.4, ease: "easeInOut", delay: settling ? 0.08 : 0 }}
     >
       <motion.div
         ref={wrapRef}
@@ -98,10 +108,10 @@ export function LogoSignatureIntro() {
         transition={
           settling
             ? {
-                x: { duration: 0.7, ease: kineticEase },
-                y: { duration: 0.7, ease: kineticEase },
-                scale: { duration: 0.7, ease: kineticEase },
-                opacity: { duration: 0.7, ease: "easeIn", times: [0, 0.6, 1] },
+                x: { duration: 0.4, ease: kineticEase },
+                y: { duration: 0.4, ease: kineticEase },
+                scale: { duration: 0.4, ease: kineticEase },
+                opacity: { duration: 0.4, ease: "easeIn", times: [0, 0.55, 1] },
               }
             : { duration: 0 }
         }
@@ -122,7 +132,7 @@ export function LogoSignatureIntro() {
             strokeLinejoin="round"
             initial={{ pathLength: 0 }}
             animate={drawing || settling ? { pathLength: 1 } : { pathLength: 0 }}
-            transition={{ duration: 0.55, ease: SIGN_EASE, delay: 0 }}
+            transition={{ duration: 0.35, ease: SIGN_EASE, delay: 0 }}
           />
           {/* X — premier trait */}
           <motion.path
@@ -133,7 +143,7 @@ export function LogoSignatureIntro() {
             strokeLinejoin="round"
             initial={{ pathLength: 0 }}
             animate={drawing || settling ? { pathLength: 1 } : { pathLength: 0 }}
-            transition={{ duration: 0.4, ease: SIGN_EASE, delay: 0.45 }}
+            transition={{ duration: 0.28, ease: SIGN_EASE, delay: 0.22 }}
           />
           {/* X — second trait */}
           <motion.path
@@ -144,7 +154,7 @@ export function LogoSignatureIntro() {
             strokeLinejoin="round"
             initial={{ pathLength: 0 }}
             animate={drawing || settling ? { pathLength: 1 } : { pathLength: 0 }}
-            transition={{ duration: 0.4, ease: SIGN_EASE, delay: 0.62 }}
+            transition={{ duration: 0.28, ease: SIGN_EASE, delay: 0.32 }}
           />
           {/* Paraphe — trait de soulignement, seule touche de couleur */}
           <motion.path
@@ -155,7 +165,7 @@ export function LogoSignatureIntro() {
             strokeLinejoin="round"
             initial={{ pathLength: 0 }}
             animate={drawing || settling ? { pathLength: 1 } : { pathLength: 0 }}
-            transition={{ duration: 0.45, ease: SIGN_EASE, delay: 0.95 }}
+            transition={{ duration: 0.3, ease: SIGN_EASE, delay: 0.48 }}
           />
         </svg>
       </motion.div>
