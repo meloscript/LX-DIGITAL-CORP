@@ -394,12 +394,21 @@
 
   /* ── Hero — mobile first ── */
   .hero-mock-stage {
+    --bg-0: #060606;
+    --ember-deep: #2a140a;
+    --violet-deep: #1a0f2e;
+
+    position: relative;
     width: 100%;
     max-width: 100%;
     overflow-x: clip;
-    background: #060606;
     display: flex;
     justify-content: center;
+    /* Fond plein écran — mobile + PC */
+    background:
+      radial-gradient(ellipse 320px 260px at 82% 12%, var(--violet-deep) 0%, rgba(26, 15, 46, 0.28) 40%, rgba(6, 6, 6, 0) 68%),
+      radial-gradient(ellipse 420px 340px at 50% 46%, var(--ember-deep) 0%, rgba(20, 10, 6, 0.35) 45%, rgba(6, 6, 6, 0) 72%),
+      var(--bg-0);
   }
 
   .hero-mock {
@@ -417,6 +426,7 @@
     --hairline: rgba(255, 255, 255, 0.08);
 
     position: relative;
+    z-index: 2;
     width: 100%;
     max-width: 100%;
     margin: 0 auto;
@@ -424,10 +434,7 @@
     min-height: 100dvh;
     overflow-x: clip;
     overflow-y: visible;
-    background:
-      radial-gradient(ellipse 320px 260px at 82% 12%, var(--violet-deep) 0%, rgba(26, 15, 46, 0.28) 40%, rgba(6, 6, 6, 0) 68%),
-      radial-gradient(ellipse 420px 340px at 50% 46%, var(--ember-deep) 0%, rgba(20, 10, 6, 0.35) 45%, rgba(6, 6, 6, 0) 72%),
-      var(--bg-0);
+    background: transparent;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -444,8 +451,156 @@
   }
 
   /* Grain : desktop only (coûteux sur mobile) */
-  .hero-mock::before {
+  .hero-mock-stage::before {
     display: none;
+  }
+
+  /* Étincelles fond — visibles mobile + desktop */
+  .hero-sparks {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .hero-spark {
+    --spark-peak: 1;
+    --spark-floor: 0.22;
+    position: absolute;
+    border-radius: 50%;
+    opacity: var(--spark-floor);
+    will-change: opacity, transform;
+    animation-name: hero-spark-twinkle;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    box-shadow:
+      0 0 8px 2px currentColor,
+      0 0 18px 4px currentColor;
+  }
+
+  .hero-spark::before,
+  .hero-spark::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: currentColor;
+    border-radius: 1px;
+    opacity: 1;
+  }
+
+  .hero-spark::before {
+    width: 1.5px;
+    height: 420%;
+  }
+
+  .hero-spark::after {
+    width: 420%;
+    height: 1.5px;
+  }
+
+  .hero-spark--ember {
+    color: #ff6b3d;
+    background: #ffc4a8;
+  }
+
+  .hero-spark--violet {
+    color: #9b87c9;
+    background: #d4c8f0;
+  }
+
+  .hero-spark--chrome {
+    color: rgba(246, 246, 244, 0.9);
+    background: #fff;
+  }
+
+  /* Dense dès le mobile ; extras PC seulement */
+  .hero-spark--pc {
+    display: none;
+  }
+
+  @keyframes hero-spark-twinkle {
+    0%,
+    100% {
+      opacity: var(--spark-floor, 0.22);
+      transform: scale(0.55);
+    }
+    35% {
+      opacity: var(--spark-peak, 1);
+      transform: scale(1.15);
+    }
+    55% {
+      opacity: calc(var(--spark-peak, 1) * 0.55);
+      transform: scale(0.85);
+    }
+  }
+
+  @media (min-width: 640px) {
+    .hero-spark {
+      box-shadow:
+        0 0 8px 2px currentColor,
+        0 0 20px 4px currentColor;
+    }
+
+    .hero-spark::before {
+      height: 380%;
+    }
+
+    .hero-spark::after {
+      width: 380%;
+    }
+  }
+
+  /* PC : bien visibles */
+  @media (min-width: 1024px) {
+    .hero-spark {
+      --spark-peak: 1;
+      box-shadow:
+        0 0 8px 2px currentColor,
+        0 0 20px 4px currentColor;
+    }
+
+    .hero-spark::before,
+    .hero-spark::after {
+      opacity: 1;
+    }
+
+    .hero-spark::before {
+      height: 400%;
+    }
+
+    .hero-spark::after {
+      width: 400%;
+    }
+
+    .hero-spark--pc {
+      display: block;
+    }
+
+    .hero-spark--ember {
+      color: #ff6b3d;
+      background: #ffc4a8;
+    }
+
+    .hero-spark--violet {
+      color: #9b87c9;
+      background: #d4c8f0;
+    }
+
+    .hero-spark--chrome {
+      color: rgba(246, 246, 244, 0.75);
+      background: #fff;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-spark {
+      animation: none !important;
+      opacity: 0.55;
+      transform: none;
+    }
   }
 
   .hero-mock-eyebrow {
@@ -877,15 +1032,18 @@
     }
   }
 
-  /* ── sm+ ── */
+  /* ── sm / tablette ── */
   @media (min-width: 640px) {
-    .hero-mock {
-      max-width: 480px;
-      padding: 72px 32px 48px;
+    .hero-mock-stage {
       background:
         radial-gradient(ellipse 420px 340px at 82% 14%, var(--violet-deep) 0%, rgba(26, 15, 46, 0.28) 40%, rgba(6, 6, 6, 0) 68%),
         radial-gradient(ellipse 620px 460px at 50% 46%, var(--ember-deep) 0%, rgba(20, 10, 6, 0.35) 45%, rgba(6, 6, 6, 0) 72%),
         var(--bg-0);
+    }
+
+    .hero-mock {
+      max-width: 520px;
+      padding: 88px 36px 48px;
     }
 
     .hero-mock-eyebrow {
@@ -894,8 +1052,8 @@
     }
 
     .hero-mock-tree {
-      width: 78%;
-      max-width: 320px;
+      width: 82%;
+      max-width: 360px;
       margin-top: 22px;
     }
 
@@ -927,13 +1085,13 @@
 
     .hero-mock-sub {
       font-size: 20px;
-      max-width: 380px;
+      max-width: 420px;
       padding: 0;
     }
 
     .hero-mock-body {
       font-size: 16px;
-      max-width: 360px;
+      max-width: 400px;
       margin-top: 16px;
       padding: 0;
     }
@@ -956,9 +1114,9 @@
     }
   }
 
-  /* ── md+ : grain ── */
+  /* ── md+ : grain plein écran ── */
   @media (min-width: 768px) {
-    .hero-mock::before {
+    .hero-mock-stage::before {
       content: "";
       display: block;
       position: absolute;
@@ -967,6 +1125,172 @@
       pointer-events: none;
       mix-blend-mode: overlay;
       z-index: 1;
+    }
+  }
+
+  /* ── lg / PC ── */
+  @media (min-width: 1024px) {
+    .hero-mock-stage {
+      background:
+        radial-gradient(ellipse 720px 520px at 78% 10%, var(--violet-deep) 0%, rgba(26, 15, 46, 0.32) 38%, rgba(6, 6, 6, 0) 70%),
+        radial-gradient(ellipse 900px 640px at 50% 48%, var(--ember-deep) 0%, rgba(20, 10, 6, 0.38) 42%, rgba(6, 6, 6, 0) 74%),
+        var(--bg-0);
+    }
+
+    .hero-mock {
+      max-width: 720px;
+      padding: 108px 48px 56px;
+      gap: 0;
+    }
+
+    .hero-mock-eyebrow {
+      font-size: 13px;
+      letter-spacing: 7px;
+    }
+
+    .hero-mock-tree {
+      width: 78%;
+      max-width: 480px;
+      margin-top: 28px;
+      overflow: visible;
+    }
+
+    .hero-mock-labels {
+      overflow: visible;
+      margin-top: 8px;
+      gap: 4px;
+      padding: 0;
+    }
+
+    .hero-mock-labels span {
+      font-size: 11px;
+      letter-spacing: 0.9px;
+      overflow: visible;
+    }
+
+    .hero-mock-rule {
+      margin-top: 28px;
+    }
+
+    .hero-mock-h1 {
+      font-size: clamp(4rem, 5.2vw, 5rem); /* 64–80px */
+      letter-spacing: -2px;
+      margin-top: 36px;
+    }
+
+    .hero-mock-h2 {
+      font-size: clamp(2.25rem, 3vw, 2.75rem); /* 36–44px */
+      letter-spacing: -0.8px;
+      margin-top: 14px;
+    }
+
+    .hero-mock-divider {
+      width: 80px;
+      height: 3px;
+      margin: 32px 0;
+    }
+
+    .hero-mock-sub {
+      font-size: 22px;
+      max-width: 520px;
+      line-height: 1.35;
+    }
+
+    .hero-mock-body {
+      font-size: 17px;
+      max-width: 480px;
+      margin-top: 18px;
+      line-height: 1.65;
+    }
+
+    .hero-mock-ctas {
+      flex-direction: row;
+      justify-content: center;
+      align-items: stretch;
+      width: auto;
+      max-width: 100%;
+      margin-top: 40px;
+      gap: 14px;
+    }
+
+    .hero-mock-btn-primary,
+    .hero-mock-btn-secondary {
+      width: auto;
+      min-width: 240px;
+      min-height: 56px;
+      padding: 18px 28px;
+      font-size: 16px;
+      transition:
+        transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.25s ease,
+        filter 0.25s ease;
+    }
+
+    .hero-mock-btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+        0 14px 32px -8px rgba(224, 84, 42, 0.6),
+        0 4px 10px rgba(224, 84, 42, 0.35);
+    }
+
+    .hero-mock-btn-secondary:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
+    }
+
+    .hero-mock-scroll {
+      margin-top: 48px;
+      letter-spacing: 5px;
+      font-size: 11px;
+    }
+
+    .hero-mock-scroll-line {
+      height: 56px;
+    }
+  }
+
+  /* ── xl / grand écran ── */
+  @media (min-width: 1280px) {
+    .hero-mock {
+      max-width: 800px;
+      padding: 120px 56px 64px;
+    }
+
+    .hero-mock-tree {
+      max-width: 520px;
+    }
+
+    .hero-mock-labels span {
+      font-size: 11.5px;
+      letter-spacing: 1.1px;
+    }
+
+    .hero-mock-h1 {
+      font-size: 80px;
+      letter-spacing: -2.4px;
+    }
+
+    .hero-mock-h2 {
+      font-size: 44px;
+      letter-spacing: -1px;
+    }
+
+    .hero-mock-sub {
+      font-size: 24px;
+      max-width: 560px;
+    }
+
+    .hero-mock-body {
+      font-size: 18px;
+      max-width: 520px;
+    }
+
+    .hero-mock-btn-primary,
+    .hero-mock-btn-secondary {
+      min-width: 260px;
+      min-height: 58px;
+      font-size: 17px;
     }
   }
 

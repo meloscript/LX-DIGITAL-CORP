@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import { HeroSection } from "@/components/sections/hero";
+import { HeroSparks } from "@/components/sections/hero-sparks";
 
 const ValueSection = dynamic(() =>
   import("@/components/sections/value").then((m) => m.ValueSection)
@@ -38,6 +39,7 @@ export default function HomePage() {
   return (
     <>
       <div className="hero-mock-stage">
+        <HeroSparks />
         <HeroSection />
       </div>
       <div className="section-defer">

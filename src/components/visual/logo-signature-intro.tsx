@@ -6,16 +6,16 @@ import { kineticEase } from "@/lib/motion-config";
 import { usePerformanceMode } from "@/hooks/use-performance-mode";
 
 const SIGN_EASE = [0.65, 0, 0.35, 1] as const;
+const DRAW_MS = 900;
+const SETTLE_MS = 420;
+const FAILSAFE_MS = 2200;
 
 type Stage = "idle" | "draw" | "settle" | "done";
 type Target = { x: number; y: number; scale: number };
 
 /**
- * Intro one-shot : le monogramme "LX" se dessine comme une signature au
- * chargement, puis rétrécit et glisse jusqu'à la position réelle du logo
- * dans la navbar — la signature "devient" le logo, elle ne décore pas la
- * page, elle introduit la marque avant de rendre la main au site.
- * Une seule fois par session, désactivée si mouvement réduit / mode léger.
+ * Intro one-shot desktop : signature LX → logo navbar.
+ * Skip mobile / reduced motion. Failsafe anti-blocage.
  */
 export function LogoSignatureIntro() {
   const reduced = useReducedMotion();
@@ -24,28 +24,38 @@ export function LogoSignatureIntro() {
   const [stage, setStage] = useState<Stage>("idle");
   const [target, setTarget] = useState<Target | null>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
+  const finished = useRef(false);
+
+  const finish = () => {
+    if (finished.current) return;
+    finished.current = true;
+    setStage("done");
+    setShouldRun(false);
+    document.body.style.overflow = "";
+    try {
+      sessionStorage.setItem("lx-logo-intro", "1");
+    } catch {
+      /* private mode */
+    }
+  };
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (reduced || !animateEntrance) return;
-
-    /* Mobile first : pas d’intro bloquante — LCP plus rapide */
-    if (window.matchMedia("(max-width: 768px)").matches) return;
+    if (window.matchMedia("(max-width: 1023px)").matches) return;
 
     try {
       if (sessionStorage.getItem("lx-logo-intro") === "1") return;
-      sessionStorage.setItem("lx-logo-intro", "1");
     } catch {
-      /* private mode — run once anyway */
+      /* continue */
     }
 
     setShouldRun(true);
     setStage("draw");
-
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
-    const toSettle = setTimeout(() => {
+    const toSettle = window.setTimeout(() => {
       const anchor = document.getElementById("brand-logo-anchor");
       const wrap = wrapRef.current;
 
@@ -55,7 +65,7 @@ export function LogoSignatureIntro() {
         setTarget({
           x: a.left + a.width / 2 - (w.left + w.width / 2),
           y: a.top + a.height / 2 - (w.top + w.height / 2),
-          scale: a.width / w.width,
+          scale: Math.max(0.12, a.width / Math.max(w.width, 1)),
         });
       } else {
         setTarget({
@@ -65,10 +75,13 @@ export function LogoSignatureIntro() {
         });
       }
       setStage("settle");
-    }, 900);
+    }, DRAW_MS);
+
+    const failsafe = window.setTimeout(finish, FAILSAFE_MS);
 
     return () => {
       clearTimeout(toSettle);
+      clearTimeout(failsafe);
       document.body.style.overflow = previousOverflow;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -76,11 +89,9 @@ export function LogoSignatureIntro() {
 
   useEffect(() => {
     if (stage !== "settle") return;
-    const toDone = setTimeout(() => {
-      setStage("done");
-      document.body.style.overflow = "";
-    }, 420);
+    const toDone = window.setTimeout(finish, SETTLE_MS);
     return () => clearTimeout(toDone);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stage]);
 
   if (!shouldRun || stage === "idle" || stage === "done") return null;
@@ -98,7 +109,7 @@ export function LogoSignatureIntro() {
     >
       <motion.div
         ref={wrapRef}
-        className="relative w-[min(72vw,200px)] sm:w-[min(58vw,220px)]"
+        className="relative w-[min(42vw,240px)]"
         style={{ aspectRatio: "320 / 150" }}
         animate={
           settling && target
@@ -123,7 +134,6 @@ export function LogoSignatureIntro() {
           fill="none"
           preserveAspectRatio="xMidYMid meet"
         >
-          {/* L */}
           <motion.path
             d="M60,25 C48,45 46,75 50,100 C52,110 55,116 60,118 C75,124 95,120 108,110"
             stroke="#F5F3EE"
@@ -134,7 +144,6 @@ export function LogoSignatureIntro() {
             animate={drawing || settling ? { pathLength: 1 } : { pathLength: 0 }}
             transition={{ duration: 0.35, ease: SIGN_EASE, delay: 0 }}
           />
-          {/* X — premier trait */}
           <motion.path
             d="M150,35 C175,60 205,85 245,115"
             stroke="#F5F3EE"
@@ -145,7 +154,6 @@ export function LogoSignatureIntro() {
             animate={drawing || settling ? { pathLength: 1 } : { pathLength: 0 }}
             transition={{ duration: 0.28, ease: SIGN_EASE, delay: 0.22 }}
           />
-          {/* X — second trait */}
           <motion.path
             d="M250,30 C220,58 190,85 148,112"
             stroke="#F5F3EE"
@@ -156,7 +164,6 @@ export function LogoSignatureIntro() {
             animate={drawing || settling ? { pathLength: 1 } : { pathLength: 0 }}
             transition={{ duration: 0.28, ease: SIGN_EASE, delay: 0.32 }}
           />
-          {/* Paraphe — trait de soulignement, seule touche de couleur */}
           <motion.path
             d="M45,132 C110,148 220,148 270,128"
             stroke="#FF4D23"
