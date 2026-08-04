@@ -553,26 +553,29 @@
     }
   }
 
-  /* PC : bien visibles */
+  /* PC : plus discrètes qu’au téléphone */
   @media (min-width: 1024px) {
     .hero-spark {
-      --spark-peak: 1;
+      --spark-peak: 0.55;
+      --spark-floor: 0.1;
       box-shadow:
-        0 0 8px 2px currentColor,
-        0 0 20px 4px currentColor;
+        0 0 5px 1px currentColor,
+        0 0 12px 2px currentColor;
     }
 
     .hero-spark::before,
     .hero-spark::after {
-      opacity: 1;
+      opacity: 0.65;
     }
 
     .hero-spark::before {
-      height: 400%;
+      width: 1px;
+      height: 300%;
     }
 
     .hero-spark::after {
-      width: 400%;
+      width: 300%;
+      height: 1px;
     }
 
     .hero-spark--pc {
@@ -580,18 +583,18 @@
     }
 
     .hero-spark--ember {
-      color: #ff6b3d;
-      background: #ffc4a8;
+      color: rgba(255, 107, 61, 0.7);
+      background: rgba(255, 176, 138, 0.85);
     }
 
     .hero-spark--violet {
-      color: #9b87c9;
-      background: #d4c8f0;
+      color: rgba(155, 135, 201, 0.65);
+      background: rgba(212, 200, 240, 0.8);
     }
 
     .hero-spark--chrome {
-      color: rgba(246, 246, 244, 0.75);
-      background: #fff;
+      color: rgba(246, 246, 244, 0.45);
+      background: rgba(255, 255, 255, 0.85);
     }
   }
 
