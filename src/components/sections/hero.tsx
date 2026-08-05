@@ -134,15 +134,17 @@ export function HeroSection() {
         LX Digital Corp — Vos clients vous trouvent d&apos;abord.
       </h1>
 
-      <div
-        className="hero-mock-h1 hero-mock-enter"
-        aria-hidden="true"
-        style={{ ["--d" as string]: "320ms" }}
-      >
-        VOS CLIENTS
-      </div>
+      <div className="hero-mock-title">
+        <div
+          className="hero-mock-h1 hero-mock-enter"
+          aria-hidden="true"
+          style={{ ["--d" as string]: "320ms" }}
+        >
+          VOS CLIENTS
+        </div>
 
-      <HeroHeadlineSwap />
+        <HeroHeadlineSwap />
+      </div>
 
       <div
         className="hero-mock-divider hero-mock-enter"
